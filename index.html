@@ -1,1 +1,522 @@
-ok 
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</title>
+
+  <style>
+    :root{
+      --verde1:#73FF9A;
+      --verde2:#30E18B;
+      --azul1:#0e4d7d;
+      --azul2:#06233f;
+
+      --stroke: rgba(255,255,255,.20);
+      --shadow: 0 18px 55px rgba(0,0,0,.22);
+      --shadow2: 0 10px 22px rgba(0,0,0,.16);
+    }
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+      width:100%;
+      height:100%;
+      margin:0;
+      padding:0;
+      overflow: hidden !important;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      color:#fff;
+      background: linear-gradient(135deg, #69ff9f 0%, #2be28d 18%, #0e4d7d 65%, #06233f 100%);
+      position: relative;
+    }
+
+    body::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: url("logo/logotipo.png") center 55% / 760px no-repeat;
+      opacity: 0.24;
+      pointer-events:none;
+      z-index:0;
+      filter: contrast(1.25) brightness(1.08);
+      mix-blend-mode: screen;
+    }
+
+    body::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,.14), transparent 44%),
+        radial-gradient(circle at 85% 75%, rgba(115,255,154,.09), transparent 44%),
+        linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,.30));
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .app{
+      position:relative;
+      z-index:1;
+      width:100%;
+      height:100%;
+      display:grid;
+      grid-template-columns: minmax(480px, 1fr) minmax(460px, 52%);
+      gap: 14px;
+      padding: 14px 18px;
+    }
+
+    .left{
+      min-width:0;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      overflow:hidden;
+    }
+
+    .right{
+      min-width:0;
+      height:100%;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .rightTop{
+      flex:0 0 auto;
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.12);
+      background: rgba(6,35,63,.45);
+    }
+    .rightTop strong{
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:900;
+    }
+
+    .frameWrap{
+      flex:1 1 auto;
+      min-height:0;
+      background: rgba(0,0,0,.10);
+    }
+
+    #iframeLaudo{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:#fff;
+    }
+
+    header{
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .sysOnly{
+      margin:0;
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      flex-wrap:wrap;
+      font-weight:900;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      color:#fff;
+      text-shadow: 0 12px 28px rgba(0,0,0,.32);
+    }
+
+    .sysOnly .t1{ font-size: 20px; }
+    .sysOnly .dot{
+      font-size: 14px;
+      opacity: .82;
+      transform: translateY(-1px);
+    }
+    .sysOnly .t2{
+      font-size: 20px;
+      padding: 3px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 10px 20px rgba(0,0,0,.14);
+    }
+
+    .devCard{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:2px;
+      padding: 7px 12px;
+      border-radius: 14px;
+      background: rgba(6, 35, 63, 0.88);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      user-select:none;
+    }
+    .devCard .nome{
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .8px;
+      color:#fff;
+      text-transform:uppercase;
+    }
+    .devCard .cargo{
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      color: rgba(255,255,255,.78);
+      text-transform:uppercase;
+    }
+
+    main{
+      flex: 1 1 auto;
+      min-height: 0;
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+      padding-top: 10px;
+    }
+
+    .glass{
+      width: 100%;
+      max-width: 1180px;
+      height: auto;
+      min-height: 0;
+      max-height: calc(100vh - 110px);
+      border-radius: 26px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+      display:flex;
+    }
+
+    .panel{
+      width:100%;
+      height:100%;
+      min-height:0;
+      padding: 14px 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      overflow:auto;
+    }
+
+    .panelTitle{
+      margin:0;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color:#fff;
+      text-shadow: 0 10px 24px rgba(0,0,0,.30);
+      line-height:1.05;
+    }
+
+    .guideLine{
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.09);
+      box-shadow: var(--shadow2);
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap: 10px;
+      font-weight: 900;
+      color: rgba(255,255,255,.92);
+      letter-spacing: .7px;
+      flex: 0 0 auto;
+    }
+    .guideLine .tag{
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+      white-space: nowrap;
+      color:#fff;
+      font-size: 13px;
+    }
+    .guideLine .sep{
+      opacity:.55;
+      font-weight:900;
+      color: rgba(255,255,255,.75);
+    }
+
+    textarea{
+      width:100%;
+      flex: 1 1 auto;
+      min-height: 220px;
+      max-height: 360px;
+      resize:none;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.14);
+      box-shadow: 0 12px 22px rgba(0,0,0,.14);
+      padding: 14px;
+      outline:none;
+      font-size: 15px;
+      color:#fff;
+      line-height: 1.35;
+      overflow:auto;
+    }
+    textarea::placeholder{ color: rgba(255,255,255,.64); }
+
+    .btn{
+      flex:0 0 auto;
+      align-self: center;
+      width: min(680px, 92%);
+      border:none;
+      border-radius: 18px;
+      padding: 12px 16px;
+      cursor:pointer;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      color:#041b2f;
+      background: linear-gradient(90deg, #00e09c, #1376b8);
+      box-shadow: 0 16px 26px rgba(0,0,0,.18);
+      transition: transform .08s ease, filter .2s ease;
+    }
+    .btn:hover{ filter: brightness(1.03); }
+    .btn:active{ transform: translateY(1px); }
+
+    @media (max-width: 1180px){
+      .app{ grid-template-columns: 1fr; padding: 12px; }
+      .right{ height: 62vh; }
+      main{ padding-top: 12px; }
+      .glass{ max-height: none; }
+      textarea{ max-height: 420px; }
+    }
+
+    @media (max-width: 520px){
+      textarea{ min-height: 240px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <div class="left">
+      <header>
+        <h1 class="sysOnly">
+          <span class="t1">SI — SISTEMA DE INFORMAÇÃO</span>
+          <span class="dot" aria-hidden="true">●</span>
+          <span class="t2">LAUDOS</span>
+        </h1>
+
+        <div class="devCard">
+          <div class="nome">MARCOS PONTES</div>
+          <div class="cargo">DESENVOLVEDOR</div>
+        </div>
+      </header>
+
+      <main>
+        <section class="glass">
+          <div class="panel">
+            <h2 class="panelTitle">Digitação rápida</h2>
+
+            <div class="guideLine">
+              <span class="tag">DC</span><span class="sep">|</span>
+              <span class="tag">DN</span><span class="sep">|</span>
+              <span class="tag">CN</span><span class="sep">|</span>
+              <span class="tag">TEL</span><span class="sep">|</span>
+              <span class="tag">RUA</span><span class="sep">|</span>
+              <span class="tag">CEP</span><span class="sep">|</span>
+              <span class="tag">RES</span>
+              <span class="sep">=</span>
+              <span class="tag">SNM</span><span class="sep">|</span>
+              <span class="tag">EAM</span>
+            </div>
+
+            <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
+
+            <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <aside class="right">
+      <div class="rightTop">
+        <strong>LAUDO — EMISSÃO</strong>
+      </div>
+      <div class="frameWrap">
+        <iframe id="iframeLaudo" title="Laudo"></iframe>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    const LAUDO_URL = "laudo.html";
+    const $ = (id)=>document.getElementById(id);
+
+    const MAPA_RESP = {
+      "EAM": "EDVÂNIA APARECIDA MENDES DE AZEVÊDO",
+      "SNM": "SHEINA N. MORAIS RAMALHO"
+    };
+
+    function soDigitos(s){ return (s || "").replace(/\D+/g, ""); }
+
+    function formatarDataBr(d){
+      const x = soDigitos(d);
+      if(x.length === 8){
+        return `${x.slice(0,2)}/${x.slice(2,4)}/${x.slice(4,8)}`;
+      }
+      const s = (d || "").trim();
+      if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
+      return s;
+    }
+
+    function detectarExameNoTexto(texto){
+      const m = (texto || "").match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
+      if(!m) return "";
+      return `${m[1]}/${m[2]}`;
+    }
+
+    function parseDigitacaoRapida(texto){
+      const linhas = (texto || "")
+        .replace(/\r/g, "\n")
+        .split("\n")
+        .map(l => l.trim())
+        .filter(Boolean);
+
+      const l1 = linhas[0] || "";
+      const exame = detectarExameNoTexto(l1) || detectarExameNoTexto(texto);
+
+      let paciente = l1;
+      if(exame){
+        paciente = l1.replace(new RegExp("(\\d{3,6})\\s*[\\/\\.\\-]\\s*(\\d{4})"), "").trim();
+      }
+
+      const data_coleta = formatarDataBr(linhas[1] || "");
+      const data_nascimento = formatarDataBr(linhas[2] || "");
+      const cartao_sus = soDigitos(linhas[3] || "");
+      const telefone = soDigitos(linhas[4] || "");
+
+      let rua = "";
+      let bairro = "";
+      let cidade = "";
+      let cep = "";
+      let responsavel = "";
+      let observacao = "";
+
+      for(let i=5; i<linhas.length; i++){
+        const ln = linhas[i];
+
+        if(/^rua\s*:/i.test(ln)){ rua = ln.replace(/^rua\s*:\s*/i, "").trim(); continue; }
+        if(/^bairro\s*:/i.test(ln)){ bairro = ln.replace(/^bairro\s*:\s*/i, "").trim(); continue; }
+        if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
+        if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
+
+        if(/^(EAM|SNM)$/i.test(ln)){
+          const sigla = ln.toUpperCase().trim();
+          responsavel = MAPA_RESP[sigla] || sigla;
+          continue;
+        }
+
+        if(!observacao && ln.length > 8){
+          observacao = ln;
+        }
+      }
+
+      return {
+        paciente: (paciente || "").trim(),
+        exame,
+        data_coleta,
+        data_nascimento,
+        cartao_sus,
+        telefone,
+        rua,
+        bairro,
+        cidade,
+        cep,
+        responsavel,
+        observacao
+      };
+    }
+
+    function abrirLaudoNoPainel(dados){
+      localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({ ...dados, ts: Date.now() }));
+
+      const params = new URLSearchParams();
+      if(dados.paciente)        params.set("paciente", dados.paciente);
+      if(dados.exame)           params.set("exame", dados.exame);
+      if(dados.data_coleta)     params.set("data_coleta", dados.data_coleta);
+      if(dados.data_nascimento) params.set("data_nascimento", dados.data_nascimento);
+      if(dados.cartao_sus)      params.set("cartao_sus", dados.cartao_sus);
+      if(dados.telefone)        params.set("telefone", dados.telefone);
+      if(dados.rua)             params.set("rua", dados.rua);
+      if(dados.bairro)          params.set("bairro", dados.bairro);
+      if(dados.cidade)          params.set("cidade", dados.cidade);
+      if(dados.cep)             params.set("cep", dados.cep);
+      if(dados.responsavel)     params.set("responsavel", dados.responsavel);
+      if(dados.observacao)      params.set("observacao", dados.observacao);
+
+      // ✅ CACHE-BUSTER DEFINITIVO
+      params.set("v", Date.now());
+
+      $("iframeLaudo").src = `${LAUDO_URL}?${params.toString()}`;
+    }
+
+    $("btnExtrair").addEventListener("click", ()=>{
+      const texto = $("textoDigitacao").value.trim();
+      if(!texto){
+        alert("Cole os dados da digitação rápida.");
+        return;
+      }
+
+      const dados = parseDigitacaoRapida(texto);
+
+      if(!dados.paciente){
+        alert("Não consegui identificar o nome da paciente.");
+        return;
+      }
+
+      if(!dados.exame){
+        const ok = confirm("Não identifiquei o número do exame automaticamente. Deseja continuar mesmo assim?");
+        if(!ok) return;
+      }
+
+      abrirLaudoNoPainel(dados);
+      $("textoDigitacao").focus();
+    });
+
+    document.addEventListener("keydown", (e)=>{
+      if(e.ctrlKey && e.key === "Enter"){
+        e.preventDefault();
+        $("btnExtrair").click();
+      }
+    });
+
+    window.addEventListener("message", (ev)=>{
+      if(!ev.data || typeof ev.data !== "object") return;
+      if(ev.data.type === "LAUDO_IMPRESSO"){
+        $("textoDigitacao").value = "";
+        $("textoDigitacao").focus();
+      }
+    });
+  </script>
+</body>
+</html>
+ 
