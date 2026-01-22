@@ -8,19 +8,19 @@
 .guia,
 [data-note],
 .instrucao {
-  font-size: 10px !important;
-  line-height: 1.2 !important;
-  font-weight: 800 !important;
-  letter-spacing: .02em !important;
-  text-transform: uppercase !important;
+  font-size: 9px !important;        /* menor */
+  line-height: 1.15 !important;
+  font-weight: 400 !important;      /* remove negrito */
+  letter-spacing: 0 !important;     /* mais natural */
+  text-transform: none !important;  /* tira caixa alta */
 
-  opacity: .55 !important;      /* discreto */
+  opacity: .55 !important;
   color: rgba(255,255,255,.86) !important;
 
-  padding: 4px 8px !important;
+  padding: 3px 7px !important;
   border-radius: 10px !important;
-  background: rgba(0,0,0,.18) !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
+  background: rgba(0,0,0,.16) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
 
   max-width: 420px !important;
 }
@@ -29,7 +29,6 @@
 .note-arrow,
 .seta,
 .arrow {
-  transform: scale(.75) !important;
+  transform: scale(.70) !important;
   opacity: .55 !important;
 }
-
