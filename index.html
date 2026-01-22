@@ -4,17 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</title>
-  
+
   <link rel="icon" href="img/favicon/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
-  
+
   <style>
     :root{
-      --verde1:#73FF9A;
-      --verde2:#30E18B;
-      --azul1:#0e4d7d;
-      --azul2:#06233f;
-
       --stroke: rgba(255,255,255,.20);
       --shadow: 0 18px 55px rgba(0,0,0,.22);
       --shadow2: 0 10px 22px rgba(0,0,0,.16);
@@ -27,8 +22,7 @@
       height:100%;
       margin:0;
       padding:0;
-      overflow:hidden !important;
-      overflow-x:hidden !important; /* ✅ mata barra horizontal */
+      overflow:hidden;
     }
 
     body{
@@ -38,6 +32,7 @@
       position: relative;
     }
 
+    /* ✅ Logo grande ao fundo */
     body::before{
       content:"";
       position:absolute;
@@ -47,9 +42,9 @@
       pointer-events:none;
       z-index:0;
       filter: contrast(1.25) brightness(1.08);
-      mix-blend-mode: screen;
     }
 
+    /* ✅ Degradê por cima (paninho) */
     body::after{
       content:"";
       position:absolute;
@@ -74,26 +69,21 @@
       align-items:stretch;
     }
 
-    .left, .right{ min-width:0; }
-
     .left{
       height:100%;
       display:flex;
       flex-direction:column;
       gap: 12px;
       overflow:hidden;
-      min-width:0;
     }
 
     header{
-      flex:0 0 auto;
       height:74px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
       padding: 0 2px;
-      min-width:0;
     }
 
     .sysOnly{
@@ -101,22 +91,14 @@
       display:flex;
       align-items:center;
       gap:10px;
-      flex-wrap:nowrap;
       white-space:nowrap;
       font-weight:900;
       letter-spacing:.9px;
       text-transform:uppercase;
-      color:#fff;
       text-shadow: 0 12px 28px rgba(0,0,0,.32);
-      min-width:0;
     }
-
     .sysOnly .t1{ font-size: 18px; }
-    .sysOnly .dot{
-      font-size: 14px;
-      opacity: .82;
-      transform: translateY(-1px);
-    }
+    .sysOnly .dot{ font-size: 14px; opacity:.82; transform: translateY(-1px); }
     .sysOnly .t2{
       font-size: 18px;
       padding: 3px 12px;
@@ -127,16 +109,12 @@
     }
 
     .devCard{
-      flex:0 0 auto;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:flex-end;
       padding: 10px 14px;
       border-radius: 14px;
       background: rgba(6, 35, 63, 0.88);
       border: 1px solid rgba(255,255,255,.18);
       box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      text-align:right;
       user-select:none;
       min-width: 170px;
     }
@@ -173,7 +151,6 @@
       -webkit-backdrop-filter: blur(14px);
       overflow:hidden;
       display:flex;
-      min-width:0;
     }
 
     .panel{
@@ -184,9 +161,8 @@
       display:flex;
       flex-direction:column;
       gap: 12px;
-      overflow-y:auto;    /* ✅ só vertical */
-      overflow-x:hidden;  /* ✅ mata barra horizontal */
-      min-width:0;
+      overflow-y:auto;
+      overflow-x:hidden;
     }
 
     .panelTitle{
@@ -195,66 +171,89 @@
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: uppercase;
-      color:#fff;
       text-shadow: 0 10px 24px rgba(0,0,0,.30);
       line-height:1.05;
     }
 
-    .guideLine{
+    /* ✅ Guia discreto */
+    .legend{
+      margin: -2px 0 6px 0;
       padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.09);
       box-shadow: var(--shadow2);
-      display:flex;
-      align-items:center;
-      gap: 10px;
+      font-size: 12px;
       font-weight: 900;
+      letter-spacing: .6px;
       color: rgba(255,255,255,.92);
-      letter-spacing: .7px;
-      flex-wrap:nowrap;
-      overflow-x:hidden; /* ✅ nunca barra */
-      min-width:0;
+      line-height: 1.25;
+    }
+    .legend small{
+      display:block;
+      margin-top:6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255,255,255,.78);
+      letter-spacing: .4px;
     }
 
-    .guideLine .tag{
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.12);
-      white-space: nowrap;
-      color:#fff;
-      font-size: 13px;
-      flex:0 0 auto;
-    }
-    .guideLine .sep{
-      opacity:.55;
-      font-weight:900;
-      color: rgba(255,255,255,.75);
-      flex:0 0 auto;
+    /* ✅ formulário */
+    .form{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
     }
 
-    textarea{
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    .campo label{
+      display:block;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .4px;
+      margin: 0 0 6px 2px;
+      color: rgba(255,255,255,.92);
+      text-transform: uppercase;
+    }
+
+    .campo input, .campo select, .campo textarea{
       width:100%;
-      flex: 1 1 auto;
-      min-height: 260px;
-      resize:none;
-      border-radius: 18px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.14);
-      box-shadow: 0 12px 22px rgba(0,0,0,.14);
-      padding: 14px;
+      background: rgba(0,0,0,.16);
+      box-shadow: 0 10px 18px rgba(0,0,0,.14);
+      padding: 12px 12px;
       outline:none;
-      font-size: 15px;
+      font-size: 14px;
       color:#fff;
-      line-height: 1.35;
+      line-height: 1.2;
+    }
+
+    .campo textarea{
+      min-height: 80px;
+      resize:none;
       overflow:auto;
     }
-    textarea::placeholder{ color: rgba(255,255,255,.64); }
+
+    .campo input::placeholder{ color: rgba(255,255,255,.58); }
+    .campo textarea::placeholder{ color: rgba(255,255,255,.58); }
+
+    /* ✅ feedback validação */
+    .ok{
+      border-color: rgba(0,255,140,.65) !important;
+      box-shadow: 0 0 0 4px rgba(0,255,140,.12) !important;
+    }
+    .erro{
+      border-color: rgba(255,70,70,.65) !important;
+      box-shadow: 0 0 0 4px rgba(255,70,70,.10) !important;
+    }
 
     .btn{
-      flex:0 0 auto;
-      align-self:center;
       width: 100%;
       border:none;
       border-radius: 18px;
@@ -262,11 +261,11 @@
       cursor:pointer;
       font-size: 16px;
       font-weight: 900;
-      letter-spacing: .3px;
       color:#041b2f;
       background: linear-gradient(90deg, #00e09c, #1376b8);
       box-shadow: 0 16px 26px rgba(0,0,0,.18);
       transition: transform .08s ease, filter .2s ease;
+      margin-top: 4px;
     }
     .btn:hover{ filter: brightness(1.03); }
     .btn:active{ transform: translateY(1px); }
@@ -280,17 +279,14 @@
       overflow:hidden;
       display:flex;
       flex-direction:column;
-      min-width:0;
     }
 
     .rightTop{
-      flex:0 0 auto;
       height:46px;
       padding: 10px 14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
       border-bottom:1px solid rgba(255,255,255,.12);
       background: rgba(6,35,63,.45);
     }
@@ -307,7 +303,6 @@
       background: rgba(0,0,0,.10);
       padding: 10px;
       overflow:hidden;
-      min-width:0;
     }
 
     #iframeLaudo{
@@ -320,45 +315,12 @@
       box-shadow: 0 16px 30px rgba(0,0,0,.18);
     }
 
+    /* ✅ Responsivo */
     @media (max-width: 1180px){
-      html,body{ overflow:auto !important; }
-      .app{ grid-template-columns: 1fr; height:auto; overflow:auto; }
+      html,body{ overflow:auto; }
+      .app{ grid-template-columns: 1fr; height:auto; }
       .right{ height: 62vh; }
       main{ height: calc(100vh - 120px); }
-    }
-
-    /* =========================================
-       ✅ ANOTAÇÕES / GUIA DE AJUSTE (discretas)
-       - reduz o tamanho
-       - mantém legível
-    ========================================= */
-    .note,
-    .anotacao,
-    .guia,
-    [data-note],
-    .instrucao{
-      font-size:10px !important;
-      line-height:1.2 !important;
-      font-weight:800 !important;
-      letter-spacing:.02em !important;
-      text-transform:uppercase !important;
-
-      opacity:.55 !important;
-      color: rgba(255,255,255,.86) !important;
-
-      padding:4px 8px !important;
-      border-radius:10px !important;
-      background: rgba(0,0,0,.18) !important;
-      border:1px solid rgba(255,255,255,.12) !important;
-
-      max-width:420px !important;
-    }
-
-    .note-arrow,
-    .seta,
-    .arrow{
-      transform: scale(.75) !important;
-      opacity:.55 !important;
     }
   </style>
 </head>
@@ -385,22 +347,85 @@
           <div class="panel">
             <h2 class="panelTitle">Digitação rápida</h2>
 
-            <div class="guideLine">
-              <span class="tag">DC</span><span class="sep">|</span>
-              <span class="tag">DN</span><span class="sep">|</span>
-              <span class="tag">CN</span><span class="sep">|</span>
-              <span class="tag">TEL</span><span class="sep">|</span>
-              <span class="tag">RUA</span><span class="sep">|</span>
-              <span class="tag">CEP</span><span class="sep">|</span>
-              <span class="tag">RES</span>
-              <span class="sep">=</span>
-              <span class="tag">SNM</span><span class="sep">|</span>
-              <span class="tag">EAM</span>
+            <div class="legend">
+              Preencha campo por campo e use <b>TAB</b> para avançar.
+              Datas e números formatam automaticamente enquanto você digita.
+              <small>Atalho: <b>Ctrl + Enter</b> abre o laudo.</small>
             </div>
 
-            <textarea id="textoDigitacao" placeholder="Cole aqui os dados do paciente conforme a ordem acima..."></textarea>
+            <div class="form" id="formRapido">
+              <div class="campo">
+                <label for="paciente">Paciente</label>
+                <input id="paciente" type="text" placeholder="Nome completo do paciente" autocomplete="off">
+              </div>
 
-            <button class="btn" id="btnExtrair" type="button">EXTRAIR AUTOMATICAMENTE E ABRIR LAUDO</button>
+              <div class="row2">
+                <div class="campo">
+                  <label for="exame">Nº Exame</label>
+                  <input id="exame" type="text" placeholder="000000/0000" autocomplete="off">
+                </div>
+                <div class="campo">
+                  <label for="responsavel">Responsável</label>
+                  <select id="responsavel">
+                    <option value="">Selecione...</option>
+                    <option value="SNM">SNM — SHEINA N. MORAIS RAMALHO</option>
+                    <option value="EAM">EAM — EDVÂNIA APARECIDA MENDES DE AZEVÊDO</option>
+                    <option value="RHN">RHN — ROSA HELENA NOGUEIRA GUIMARÃES VERAS</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row2">
+                <div class="campo">
+                  <label for="data_coleta">Data da Coleta</label>
+                  <input id="data_coleta" type="text" placeholder="DD/MM/AAAA" autocomplete="off">
+                </div>
+                <div class="campo">
+                  <label for="data_nascimento">Data Nascimento</label>
+                  <input id="data_nascimento" type="text" placeholder="DD/MM/AAAA" autocomplete="off">
+                </div>
+              </div>
+
+              <div class="row2">
+                <div class="campo">
+                  <label for="sus">Cartão SUS (11 ou 15 dígitos)</label>
+                  <input id="sus" type="text" placeholder="Somente números" autocomplete="off" inputmode="numeric">
+                </div>
+                <div class="campo">
+                  <label for="telefone">Telefone</label>
+                  <input id="telefone" type="text" placeholder="(99) 99999-9999" autocomplete="off" inputmode="numeric">
+                </div>
+              </div>
+
+              <div class="campo">
+                <label for="rua">Rua</label>
+                <input id="rua" type="text" placeholder="Rua / Av. / Travessa" autocomplete="off">
+              </div>
+
+              <div class="row2">
+                <div class="campo">
+                  <label for="bairro">Bairro</label>
+                  <input id="bairro" type="text" placeholder="Bairro" autocomplete="off">
+                </div>
+                <div class="campo">
+                  <label for="cidade">Cidade</label>
+                  <input id="cidade" type="text" placeholder="Cidade" autocomplete="off">
+                </div>
+              </div>
+
+              <div class="row2">
+                <div class="campo">
+                  <label for="cep">CEP</label>
+                  <input id="cep" type="text" placeholder="00000-000" autocomplete="off" inputmode="numeric">
+                </div>
+                <div class="campo">
+                  <label for="observacao">Observação</label>
+                  <input id="observacao" type="text" placeholder="Observação extra (se houver)" autocomplete="off">
+                </div>
+              </div>
+
+              <button class="btn" id="btnExtrair" type="button">ABRIR LAUDO NO PAINEL</button>
+            </div>
           </div>
         </section>
       </main>
@@ -422,87 +447,89 @@
     const $ = (id)=>document.getElementById(id);
 
     const MAPA_RESP = {
-      "EAM": "EDVÂNIA APARECIDA MENDES DE AZEVÊDO",
-      "SNM": "SHEINA N. MORAIS RAMALHO"
+      EAM: "EDVÂNIA APARECIDA MENDES DE AZEVÊDO",
+      SNM: "SHEINA N. MORAIS RAMALHO",
+      RHN: "ROSA HELENA NOGUEIRA GUIMARÃES VERAS"
     };
 
-    function soDigitos(s){ return (s || "").replace(/\D+/g, ""); }
+    const soDigitos = (s)=> (s || "").replace(/\D+/g, "");
 
-    function formatarDataBr(d){
-      const x = soDigitos(d);
-      if(x.length === 8){
-        return `${x.slice(0,2)}/${x.slice(2,4)}/${x.slice(4,8)}`;
-      }
-      const s = (d || "").trim();
-      if(/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return s;
-      return s;
+    function aplicarMascaraData(el){
+      el.addEventListener("input", ()=>{
+        let v = soDigitos(el.value).slice(0,8);
+        if(v.length > 2) v = v.slice(0,2) + "/" + v.slice(2);
+        if(v.length > 5) v = v.slice(0,5) + "/" + v.slice(5);
+        el.value = v;
+        el.classList.toggle("ok", v.length === 10);
+        el.classList.toggle("erro", v.length > 0 && v.length !== 10);
+      });
     }
 
-    function detectarExameNoTexto(texto){
-      const m = (texto || "").match(/(\d{3,6})\s*[\/\.\-]\s*(\d{4})/);
-      if(!m) return "";
-      return `${m[1]}/${m[2]}`;
+    function aplicarMascaraCEP(el){
+      el.addEventListener("input", ()=>{
+        let v = soDigitos(el.value).slice(0,8);
+        if(v.length > 5) v = v.slice(0,5) + "-" + v.slice(5);
+        el.value = v;
+        el.classList.toggle("ok", v.length === 9);
+        el.classList.toggle("erro", v.length > 0 && v.length !== 9);
+      });
     }
 
-    function parseDigitacaoRapida(texto){
-      const linhas = (texto || "")
-        .replace(/\r/g, "\n")
-        .split("\n")
-        .map(l => l.trim())
-        .filter(Boolean);
-
-      const l1 = linhas[0] || "";
-      const exame = detectarExameNoTexto(l1) || detectarExameNoTexto(texto);
-
-      let paciente = l1;
-      if(exame){
-        paciente = l1.replace(new RegExp("(\\d{3,6})\\s*[\\/\\.\\-]\\s*(\\d{4})"), "").trim();
-      }
-
-      const data_coleta = formatarDataBr(linhas[1] || "");
-      const data_nascimento = formatarDataBr(linhas[2] || "");
-      const cartao_sus = soDigitos(linhas[3] || "");
-      const telefone = soDigitos(linhas[4] || "");
-
-      let rua = "";
-      let bairro = "";
-      let cidade = "";
-      let cep = "";
-      let responsavel = "";
-      let observacao = "";
-
-      for(let i=5; i<linhas.length; i++){
-        const ln = linhas[i];
-
-        if(/^rua\s*:/i.test(ln)){ rua = ln.replace(/^rua\s*:\s*/i, "").trim(); continue; }
-        if(/^bairro\s*:/i.test(ln)){ bairro = ln.replace(/^bairro\s*:\s*/i, "").trim(); continue; }
-        if(/^cidade\s*:/i.test(ln)){ cidade = ln.replace(/^cidade\s*:\s*/i, "").trim(); continue; }
-        if(/^cep\s*:/i.test(ln)){ cep = ln.replace(/^cep\s*:\s*/i, "").trim(); continue; }
-
-        if(/^(EAM|SNM)$/i.test(ln)){
-          const sigla = ln.toUpperCase().trim();
-          responsavel = MAPA_RESP[sigla] || sigla;
-          continue;
+    function aplicarMascaraTelefone(el){
+      el.addEventListener("input", ()=>{
+        let v = soDigitos(el.value).slice(0,11);
+        if(v.length <= 10){
+          // (99) 9999-9999
+          if(v.length > 2) v = "(" + v.slice(0,2) + ") " + v.slice(2);
+          if(v.length > 9) v = v.slice(0,9) + "-" + v.slice(9);
+        }else{
+          // (99) 99999-9999
+          v = "(" + v.slice(0,2) + ") " + v.slice(2,7) + "-" + v.slice(7);
         }
+        el.value = v;
+        const dig = soDigitos(v);
+        el.classList.toggle("ok", dig.length === 10 || dig.length === 11);
+        el.classList.toggle("erro", dig.length > 0 && dig.length < 10);
+      });
+    }
 
-        if(!observacao && ln.length > 8){
-          observacao = ln;
-        }
-      }
+    function aplicarMascaraExame(el){
+      el.addEventListener("input", ()=>{
+        let v = soDigitos(el.value).slice(0,10); // 6 + 4
+        if(v.length > 6) v = v.slice(0,6) + "/" + v.slice(6);
+        el.value = v;
+        el.classList.toggle("ok", v.length >= 8);  // tolerante
+        el.classList.toggle("erro", v.length > 0 && v.length < 7);
+      });
+    }
+
+    function aplicarRegraSUS(el){
+      el.addEventListener("input", ()=>{
+        const d = soDigitos(el.value).slice(0,15);
+        el.value = d; // ✅ sempre número corrido
+        const ok = (d.length === 11 || d.length === 15);
+        el.classList.toggle("ok", ok);
+        el.classList.toggle("erro", !ok && d.length > 0);
+      });
+    }
+
+    function coletarDados(){
+      const sigla = $("responsavel").value.trim().toUpperCase();
+      const responsavel = sigla ? (MAPA_RESP[sigla] || sigla) : "";
 
       return {
-        paciente: (paciente || "").trim(),
-        exame,
-        data_coleta,
-        data_nascimento,
-        cartao_sus,
-        telefone,
-        rua,
-        bairro,
-        cidade,
-        cep,
+        paciente: $("paciente").value.trim(),
+        exame: $("exame").value.trim(),
+        data_coleta: $("data_coleta").value.trim(),
+        data_nascimento: $("data_nascimento").value.trim(),
+        cartao_sus: $("sus").value.trim(),      // ✅ já está corrido
+        telefone: soDigitos($("telefone").value),
+        rua: $("rua").value.trim(),
+        bairro: $("bairro").value.trim(),
+        cidade: $("cidade").value.trim(),
+        cep: $("cep").value.trim(),
         responsavel,
-        observacao
+        observacao: $("observacao").value.trim()
       };
     }
 
@@ -510,46 +537,34 @@
       localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({ ...dados, ts: Date.now() }));
 
       const params = new URLSearchParams();
-      if(dados.paciente)        params.set("paciente", dados.paciente);
-      if(dados.exame)           params.set("exame", dados.exame);
-      if(dados.data_coleta)     params.set("data_coleta", dados.data_coleta);
-      if(dados.data_nascimento) params.set("data_nascimento", dados.data_nascimento);
-      if(dados.cartao_sus)      params.set("cartao_sus", dados.cartao_sus);
-      if(dados.telefone)        params.set("telefone", dados.telefone);
-      if(dados.rua)             params.set("rua", dados.rua);
-      if(dados.bairro)          params.set("bairro", dados.bairro);
-      if(dados.cidade)          params.set("cidade", dados.cidade);
-      if(dados.cep)             params.set("cep", dados.cep);
-      if(dados.responsavel)     params.set("responsavel", dados.responsavel);
-      if(dados.observacao)      params.set("observacao", dados.observacao);
+      Object.entries(dados).forEach(([k,v])=>{
+        if(v) params.set(k, v);
+      });
 
       params.set("v", Date.now());
       $("iframeLaudo").src = `${LAUDO_URL}?${params.toString()}`;
     }
 
+    // ✅ aplica máscaras
+    aplicarMascaraExame($("exame"));
+    aplicarMascaraData($("data_coleta"));
+    aplicarMascaraData($("data_nascimento"));
+    aplicarRegraSUS($("sus"));
+    aplicarMascaraTelefone($("telefone"));
+    aplicarMascaraCEP($("cep"));
+
+    // ✅ botão abrir laudo
     $("btnExtrair").addEventListener("click", ()=>{
-      const texto = $("textoDigitacao").value.trim();
-      if(!texto){
-        alert("Cole os dados da digitação rápida.");
-        return;
-      }
-
-      const dados = parseDigitacaoRapida(texto);
-
+      const dados = coletarDados();
       if(!dados.paciente){
-        alert("Não consegui identificar o nome da paciente.");
+        alert("Digite o nome do paciente.");
+        $("paciente").focus();
         return;
       }
-
-      if(!dados.exame){
-        const ok = confirm("Não identifiquei o número do exame automaticamente. Deseja continuar mesmo assim?");
-        if(!ok) return;
-      }
-
       abrirLaudoNoPainel(dados);
-      $("textoDigitacao").focus();
     });
 
+    // ✅ Ctrl + Enter
     document.addEventListener("keydown", (e)=>{
       if(e.ctrlKey && e.key === "Enter"){
         e.preventDefault();
@@ -557,13 +572,20 @@
       }
     });
 
+    // ✅ limpa campos quando imprimir
     window.addEventListener("message", (ev)=>{
-      if(!ev.data || typeof ev.data !== "object") return;
-      if(ev.data.type === "LAUDO_IMPRESSO"){
-        $("textoDigitacao").value = "";
-        $("textoDigitacao").focus();
+      if(ev.data && ev.data.type === "LAUDO_IMPRESSO"){
+        document.querySelectorAll("#formRapido input, #formRapido select").forEach(el=>{
+          if(el.tagName === "SELECT") el.value = "";
+          else el.value = "";
+          el.classList.remove("ok","erro");
+        });
+        $("paciente").focus();
       }
     });
+
+    // foco inicial
+    window.addEventListener("load", ()=> $("paciente").focus());
   </script>
 </body>
 </html>
