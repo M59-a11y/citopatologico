@@ -1,8 +1,91 @@
-/* =========================================
+/* =========================================================
+   ✅ AJUSTE COMPLETO DE VISUALIZAÇÃO (SISTEMA)
+   - equivalente ao ZOOM 90% do navegador
+   - remove negrito exagerado
+   - reduz fonte levemente e melhora consistência
+   ========================================================= */
+
+/* 1) Escala global do sistema (equivalente a zoom 90%) */
+html{
+  font-size: 90% !important;
+}
+
+/* 2) Base do texto: sem negrito exagerado + melhor renderização */
+body{
+  font-weight: 400 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* 3) Remove negrito exagerado de textos e rótulos */
+label,
+legend,
+.titulo,
+.subtitulo,
+.campo-titulo,
+.label,
+.form-label,
+small,
+p,
+span,
+li,
+a{
+  font-weight: 400 !important;
+}
+
+/* 4) Strong/b: reduz peso (não deixa tudo 700/800) */
+strong,
+b{
+  font-weight: 500 !important; /* leve destaque */
+}
+
+/* 5) Títulos com leve destaque (sem exagero) */
+h1{
+  font-size: 1.35rem !important;
+  font-weight: 600 !important;
+}
+h2{
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+}
+h3{
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+}
+
+/* 6) Campos e botões padronizados */
+input,
+select,
+textarea,
+button{
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+}
+
+/* 7) Labels (DC/CN/TEL/RUA/CEP etc): menores e naturais */
+label,
+.form-label{
+  font-size: .95rem !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* 8) Compactação leve (reduz altura geral da tela) */
+.form-group,
+.campo,
+.field,
+.row,
+.linha{
+  margin-bottom: .45rem !important;
+}
+
+
+/* =========================================================
    ✅ ANOTAÇÕES / GUIA DE AJUSTE (discretas)
    - reduz o tamanho
    - mantém legível
-========================================= */
+   ========================================================= */
 .note,
 .anotacao,
 .guia,
