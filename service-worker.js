@@ -1,50 +1,49 @@
-// service-worker.js
-// ✅ IMPORTANTE: quando você fizer alterações grandes no sistema (index/laudo),
-// aumente o número da versão abaixo para forçar atualização do cache.
+/* service-worker.js — SI Laudos (GitHub Pages)
+   ✅ Cache + atualização elegante “Nova versão disponível — Atualizar”
+*/
 
-const CACHE_VERSION = "si-laudos-v19"; // ✅ MUDE para v20, v21... quando atualizar
-const CACHE_NAME = CACHE_VERSION;
+const CACHE_VERSION = "v7"; // ✅ MUDE ESSE NÚMERO A CADA COMMIT IMPORTANTE
+const CACHE_NAME = `si-laudos-${CACHE_VERSION}`;
 
-// ✅ lista de arquivos essenciais do sistema
-const APP_SHELL = [
+const ASSETS = [
   "./",
   "./index.html",
   "./laudo.html",
   "./manifest.json",
 
-  // imagens do sistema
-  "./img/logotipo.png",
+  // pastas
+  "./css/style.css",
+
+  // imagens
   "./img/sesctopo.png",
-
-  // selo do laudo
+  "./img/rodape.png",
   "./logo/logotipo.png",
-
-  // assinatura do laudo
-  "./assinatura/ass.png",
+  "./assinatura/ass.png"
 ];
 
+// ✅ instala e guarda cache
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
-  );
   self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  );
 });
 
+// ✅ ativa e remove caches antigos
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(
-        keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null))
-      )
-    )
+      Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)))
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// ✅ estratégia: cache first, network fallback
+// ✅ fetch: cache-first (rápido) + fallback
 self.addEventListener("fetch", (event) => {
   const req = event.request;
-  if (req.method !== "GET") return;
+
+  // ignora coisas externas
+  if (!req.url.startsWith(self.location.origin)) return;
 
   event.respondWith(
     caches.match(req).then((cached) => {
@@ -52,6 +51,7 @@ self.addEventListener("fetch", (event) => {
 
       return fetch(req)
         .then((res) => {
+          // salva em cache
           const copy = res.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
           return res;
@@ -59,4 +59,13 @@ self.addEventListener("fetch", (event) => {
         .catch(() => cached);
     })
   );
+});
+
+// ✅ mensagem do site para o SW
+self.addEventListener("message", (event) => {
+  if (!event.data) return;
+
+  if (event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
