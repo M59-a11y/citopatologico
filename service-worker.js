@@ -1,6 +1,6 @@
 /* =========================================================
    SI — Sistema de Informação • Laudos
-   Service Worker com alerta elegante de atualização
+   Service Worker com atualização por commit + aviso elegante
    ========================================================= */
 
 const CACHE_VERSION = "si-laudos-v2";
@@ -9,6 +9,7 @@ const CORE_ASSETS = [
   "./index.html",
   "./laudo.html",
   "./manifest.json",
+
   "./logo/logotipo.png",
   "./img/sesctopo.png",
   "./img/rodape.png",
@@ -35,7 +36,7 @@ self.addEventListener("activate", (event) => {
 
 // Estratégia:
 // - HTML: network-first (sempre busca versão nova)
-// - outros: cache-first
+// - assets: cache-first
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
@@ -77,7 +78,7 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// Recebe mensagem do site para ativar update
+// ✅ Permite "ativar atualização" quando clicar no botão
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
