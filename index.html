@@ -13,6 +13,8 @@
       --stroke: rgba(255,255,255,.20);
       --shadow: 0 18px 55px rgba(0,0,0,.22);
       --shadow2: 0 10px 22px rgba(0,0,0,.16);
+      --verdeBtn: linear-gradient(90deg, #00e09c, #1376b8);
+      --verdeSelect: rgba(0,224,156,.20);
     }
 
     *{ box-sizing:border-box; }
@@ -32,7 +34,6 @@
       position: relative;
     }
 
-    /* ✅ Logo grande ao fundo */
     body::before{
       content:"";
       position:absolute;
@@ -44,7 +45,6 @@
       filter: contrast(1.25) brightness(1.08);
     }
 
-    /* ✅ Degradê por cima (paninho) */
     body::after{
       content:"";
       position:absolute;
@@ -163,6 +163,13 @@
       gap: 12px;
       overflow-y:auto;
       overflow-x:hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .panel::-webkit-scrollbar{
+      width:0 !important;
+      height:0 !important;
+      display:none !important;
     }
 
     .panelTitle{
@@ -175,7 +182,6 @@
       line-height:1.05;
     }
 
-    /* ✅ Guia discreto */
     .legend{
       margin: -2px 0 6px 0;
       padding: 10px 12px;
@@ -198,7 +204,6 @@
       letter-spacing: .4px;
     }
 
-    /* ✅ formulário */
     .form{
       display:flex;
       flex-direction:column;
@@ -221,7 +226,7 @@
       text-transform: uppercase;
     }
 
-    .campo input, .campo select, .campo textarea{
+    .campo input, .campo select{
       width:100%;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.18);
@@ -234,16 +239,23 @@
       line-height: 1.2;
     }
 
-    .campo textarea{
-      min-height: 80px;
-      resize:none;
-      overflow:auto;
+    /* ✅ SELECT (responsável) agora VERDE e legível */
+    .campo select{
+      background: var(--verdeSelect);
+      border: 1px solid rgba(0,224,156,.50);
+      color: #ffffff;
+      font-weight: 900;
+      letter-spacing: .02em;
+      cursor:pointer;
+    }
+    .campo select option{
+      background:#06233f;   /* escuro para ler */
+      color:#ffffff;        /* branco forte */
+      font-weight:900;
     }
 
     .campo input::placeholder{ color: rgba(255,255,255,.58); }
-    .campo textarea::placeholder{ color: rgba(255,255,255,.58); }
 
-    /* ✅ feedback validação */
     .ok{
       border-color: rgba(0,255,140,.65) !important;
       box-shadow: 0 0 0 4px rgba(0,255,140,.12) !important;
@@ -262,13 +274,28 @@
       font-size: 16px;
       font-weight: 900;
       color:#041b2f;
-      background: linear-gradient(90deg, #00e09c, #1376b8);
+      background: var(--verdeBtn);
       box-shadow: 0 16px 26px rgba(0,0,0,.18);
       transition: transform .08s ease, filter .2s ease;
       margin-top: 4px;
     }
     .btn:hover{ filter: brightness(1.03); }
     .btn:active{ transform: translateY(1px); }
+
+    .btnSec{
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 18px;
+      padding: 10px 14px;
+      cursor:pointer;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing:.04em;
+      color:#fff;
+      background: rgba(0,0,0,.12);
+      box-shadow: 0 10px 18px rgba(0,0,0,.12);
+      transition: transform .08s ease, filter .2s ease;
+    }
 
     .right{
       height:100%;
@@ -305,17 +332,17 @@
       overflow:hidden;
     }
 
+    /* ✅ iframe agora também "glass" por trás (sem branco estourado) */
     #iframeLaudo{
       width:100%;
       height:100%;
       border:0;
       display:block;
-      background:#fff;
       border-radius: 18px;
       box-shadow: 0 16px 30px rgba(0,0,0,.18);
+      background: rgba(255,255,255,.06);
     }
 
-    /* ✅ Responsivo */
     @media (max-width: 1180px){
       html,body{ overflow:auto; }
       .app{ grid-template-columns: 1fr; height:auto; }
@@ -327,7 +354,6 @@
 
 <body>
   <div class="app">
-
     <div class="left">
       <header>
         <h1 class="sysOnly">
@@ -350,7 +376,7 @@
             <div class="legend">
               Preencha campo por campo e use <b>TAB</b> para avançar.
               Datas e números formatam automaticamente enquanto você digita.
-              <small>Atalho: <b>Ctrl + Enter</b> abre o laudo.</small>
+              <small>Atalho: <b>Ctrl + Enter</b> abre o laudo. Ao entrar no campo CEP, abre busca CEP PB.</small>
             </div>
 
             <div class="form" id="formRapido">
@@ -361,8 +387,8 @@
 
               <div class="row2">
                 <div class="campo">
-                  <label for="exame">Nº Exame</label>
-                  <input id="exame" type="text" placeholder="000000/0000" autocomplete="off">
+                  <label for="exame">Nº Exame (Ex: 00059/2026)</label>
+                  <input id="exame" type="text" placeholder="00059/2026" autocomplete="off">
                 </div>
                 <div class="campo">
                   <label for="responsavel">Responsável</label>
@@ -425,6 +451,7 @@
               </div>
 
               <button class="btn" id="btnExtrair" type="button">ABRIR LAUDO NO PAINEL</button>
+              <button class="btnSec" id="btnBuscarCep" type="button">BUSCAR CEP / MUNICÍPIO (PB)</button>
             </div>
           </div>
         </section>
@@ -439,11 +466,11 @@
         <iframe id="iframeLaudo" title="Laudo"></iframe>
       </div>
     </aside>
-
   </div>
 
   <script>
     const LAUDO_URL = "laudo.html";
+    const BUSCA_CEP_URL = "https://m59-a11y.github.io/busca-cep-pb/";
     const $ = (id)=>document.getElementById(id);
 
     const MAPA_RESP = {
@@ -479,38 +506,90 @@
       el.addEventListener("input", ()=>{
         let v = soDigitos(el.value).slice(0,11);
         if(v.length <= 10){
-          // (99) 9999-9999
           if(v.length > 2) v = "(" + v.slice(0,2) + ") " + v.slice(2);
           if(v.length > 9) v = v.slice(0,9) + "-" + v.slice(9);
         }else{
-          // (99) 99999-9999
           v = "(" + v.slice(0,2) + ") " + v.slice(2,7) + "-" + v.slice(7);
         }
         el.value = v;
-        const dig = soDigitos(v);
-        el.classList.toggle("ok", dig.length === 10 || dig.length === 11);
-        el.classList.toggle("erro", dig.length > 0 && dig.length < 10);
       });
     }
 
-    function aplicarMascaraExame(el){
+    /* ✅ CORREÇÃO EXAME:
+       - aceita 00059/2026 (5 + 4)
+       - também aceita 000059/2026 (6 + 4) se você quiser
+       - nunca corta o ano
+    */
+    function aplicarMascaraExameFlex(el){
       el.addEventListener("input", ()=>{
-        let v = soDigitos(el.value).slice(0,10); // 6 + 4
-        if(v.length > 6) v = v.slice(0,6) + "/" + v.slice(6);
-        el.value = v;
-        el.classList.toggle("ok", v.length >= 8);  // tolerante
-        el.classList.toggle("erro", v.length > 0 && v.length < 7);
+        let d = soDigitos(el.value).slice(0, 10); // 6 + 4
+        let parte1 = d.slice(0, Math.min(6, d.length));
+        let parte2 = d.length > 6 ? d.slice(6, 10) : "";
+
+        // se usuário digitar só 5 no início (00059) não força 6
+        if(d.length <= 9){
+          parte1 = d.slice(0, Math.min(5, d.length));
+          parte2 = d.length > 5 ? d.slice(5, 9) : "";
+        }
+
+        el.value = parte2 ? `${parte1}/${parte2}` : parte1;
+      });
+
+      // se colar "00059/2026" mantém
+      el.addEventListener("paste", ()=>{
+        setTimeout(()=>{
+          const m = (el.value || "").match(/^\s*(\d{1,6})\s*\/\s*(\d{1,4})\s*$/);
+          if(m){
+            const a = m[1].padStart(5,"0").slice(-6);
+            const b = m[2].padStart(4,"0").slice(-4);
+            el.value = `${a}/${b}`;
+          }
+        }, 0);
       });
     }
 
     function aplicarRegraSUS(el){
       el.addEventListener("input", ()=>{
         const d = soDigitos(el.value).slice(0,15);
-        el.value = d; // ✅ sempre número corrido
+        el.value = d;
         const ok = (d.length === 11 || d.length === 15);
         el.classList.toggle("ok", ok);
         el.classList.toggle("erro", !ok && d.length > 0);
       });
+    }
+
+    function parseEnderecoColado(texto){
+      const t = (texto || "").trim();
+      if(!t) return null;
+
+      const cepMatch = t.match(/\b\d{5}-?\d{3}\b/);
+      const cep = cepMatch ? cepMatch[0].replace(/(\d{5})-?(\d{3})/, "$1-$2") : "";
+
+      if(cep && t.replace(/\D/g,"").length <= 8) return { cep };
+
+      const cityUfMatch = t.match(/([A-Za-zÀ-ÿ\s'.-]+)\/([A-Za-z]{2})/);
+      const cidade = cityUfMatch ? cityUfMatch[1].trim() : "";
+
+      let rua = "", bairro = "";
+      const parts = t.split(" - ").map(p=>p.trim()).filter(Boolean);
+
+      if(parts.length >= 2){
+        rua = parts[0].replace(/\s{2,}/g," ").trim();
+        bairro = parts[1].replace(/\s{2,}/g," ").trim();
+        if(cityUfMatch && bairro.includes(cityUfMatch[0])) bairro = bairro.replace(cityUfMatch[0],"").trim();
+        if(cep) bairro = bairro.replace(cep,"").trim().replace(/,\s*$/,"");
+      }else{
+        const byComma = t.split(",").map(p=>p.trim()).filter(Boolean);
+        if(byComma.length >= 2){
+          rua = byComma[0] || "";
+          bairro = byComma[1] || "";
+        }
+      }
+
+      if(rua) rua = rua.replace(cep,"").trim().replace(/,\s*$/,"");
+      if(bairro) bairro = bairro.replace(cep,"").trim().replace(/,\s*$/,"");
+
+      return { rua, bairro, cidade, cep };
     }
 
     function coletarDados(){
@@ -522,7 +601,7 @@
         exame: $("exame").value.trim(),
         data_coleta: $("data_coleta").value.trim(),
         data_nascimento: $("data_nascimento").value.trim(),
-        cartao_sus: $("sus").value.trim(),      // ✅ já está corrido
+        cartao_sus: $("sus").value.trim(),
         telefone: soDigitos($("telefone").value),
         rua: $("rua").value.trim(),
         bairro: $("bairro").value.trim(),
@@ -535,25 +614,43 @@
 
     function abrirLaudoNoPainel(dados){
       localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({ ...dados, ts: Date.now() }));
-
       const params = new URLSearchParams();
-      Object.entries(dados).forEach(([k,v])=>{
-        if(v) params.set(k, v);
-      });
-
+      Object.entries(dados).forEach(([k,v])=>{ if(v) params.set(k, v); });
       params.set("v", Date.now());
       $("iframeLaudo").src = `${LAUDO_URL}?${params.toString()}`;
     }
 
-    // ✅ aplica máscaras
-    aplicarMascaraExame($("exame"));
+    aplicarMascaraExameFlex($("exame"));
     aplicarMascaraData($("data_coleta"));
     aplicarMascaraData($("data_nascimento"));
     aplicarRegraSUS($("sus"));
     aplicarMascaraTelefone($("telefone"));
     aplicarMascaraCEP($("cep"));
 
-    // ✅ botão abrir laudo
+    let jaAbriuCep = false;
+    $("cep").addEventListener("focus", ()=>{
+      if(jaAbriuCep) return;
+      jaAbriuCep = true;
+      window.open(BUSCA_CEP_URL, "_blank", "noopener,noreferrer");
+    });
+
+    $("cep").addEventListener("paste", (e)=>{
+      const txt = (e.clipboardData || window.clipboardData).getData("text");
+      const parsed = parseEnderecoColado(txt);
+      if(!parsed) return;
+      setTimeout(()=>{
+        if(parsed.rua) $("rua").value = parsed.rua;
+        if(parsed.bairro) $("bairro").value = parsed.bairro;
+        if(parsed.cidade) $("cidade").value = parsed.cidade;
+        if(parsed.cep) $("cep").value = parsed.cep;
+        $("cep").dispatchEvent(new Event("input", { bubbles:true }));
+      }, 0);
+    });
+
+    $("btnBuscarCep").addEventListener("click", ()=>{
+      window.open(BUSCA_CEP_URL, "_blank", "noopener,noreferrer");
+    });
+
     $("btnExtrair").addEventListener("click", ()=>{
       const dados = coletarDados();
       if(!dados.paciente){
@@ -564,7 +661,6 @@
       abrirLaudoNoPainel(dados);
     });
 
-    // ✅ Ctrl + Enter
     document.addEventListener("keydown", (e)=>{
       if(e.ctrlKey && e.key === "Enter"){
         e.preventDefault();
@@ -572,7 +668,6 @@
       }
     });
 
-    // ✅ limpa campos quando imprimir
     window.addEventListener("message", (ev)=>{
       if(ev.data && ev.data.type === "LAUDO_IMPRESSO"){
         document.querySelectorAll("#formRapido input, #formRapido select").forEach(el=>{
@@ -580,11 +675,11 @@
           else el.value = "";
           el.classList.remove("ok","erro");
         });
+        jaAbriuCep = false;
         $("paciente").focus();
       }
     });
 
-    // foco inicial
     window.addEventListener("load", ()=> $("paciente").focus());
   </script>
 </body>
