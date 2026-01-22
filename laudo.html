@@ -146,7 +146,7 @@
     margin-top:14px;
     border-radius: var(--r22);
     border:1px solid rgba(255,255,255,.20);
-    background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+    background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,,255,.05));
     box-shadow: var(--shadow);
     overflow:hidden;
   }
@@ -526,6 +526,14 @@
     white-space:nowrap;
   }
 
+  /* ✅ AJUSTE PRINCIPAL: remover o negrito do bloco CONVÊNIO → RESPONSÁVEL */
+  .linha-identificacao strong{
+    font-weight:400 !important;     /* remove negrito */
+    text-transform:uppercase;
+    letter-spacing:0;
+  }
+
+  /* mantém o restante do laudo ok */
   .secao-print{
     margin: 14px 0 14px;
     line-height:1.65;
@@ -691,8 +699,8 @@
               <div class="grupo">
                 <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: possivelmente não neoplásicas (ASC-US)" value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
                 <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: não se pode afastar lesão intra-epitelial de alto grau (ASC-H)" value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
-                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: possivelmente não neoplásicas" value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
-                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: não se pode afastar lesão de alto grau" value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: possivelmente não neoplásicas" value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: possivelmente não neoplásicas</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: não se pode afastar lesão de alto grau" value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: não se pode afastar alto grau</label>
               </div>
 
               <div class="linha" style="margin-top:10px;">
@@ -852,6 +860,7 @@
   </div>
 </div>
 
+<!-- ✅ SEU JAVASCRIPT ORIGINAL (mantido) -->
 <script>
   function up(v){ return (v||"").toUpperCase().trim(); }
   function sanitizeFileName(name){
