@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SI - SISTEMA DE INFORMAÇÃO . LAUDOS.</title>
 
-  <!-- ✅ PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0e4d7d">
-
   <style>
     :root{
       --verde1:#73FF9A;
@@ -28,7 +24,7 @@
       height:100%;
       margin:0;
       padding:0;
-      overflow: hidden !important;
+      overflow:hidden !important;
     }
 
     body{
@@ -43,7 +39,7 @@
       position:absolute;
       inset:0;
       background: url("logo/logotipo.png") center 55% / 760px no-repeat;
-      opacity: 0.24;
+      opacity: 0.22;
       pointer-events:none;
       z-index:0;
       filter: contrast(1.25) brightness(1.08);
@@ -62,28 +58,218 @@
       z-index:0;
     }
 
+    /* ✅ LAYOUT (igual mock / travado) */
     .app{
       position:relative;
       z-index:1;
       width:100%;
       height:100%;
       display:grid;
-      grid-template-columns: minmax(480px, 1fr) minmax(460px, 52%);
+      grid-template-columns: 47% 53%;
       gap: 14px;
       padding: 14px 18px;
+      align-items:stretch;
     }
 
+    .left, .right{ min-width:0; }
+
+    /* ✅ ESQUERDA */
     .left{
-      min-width:0;
       height:100%;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap: 12px;
       overflow:hidden;
     }
 
-    .right{
+    header{
+      flex:0 0 auto;
+      height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 0 2px;
+    }
+
+    .sysOnly{
+      margin:0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:nowrap;
+      white-space:nowrap;
+      font-weight:900;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      color:#fff;
+      text-shadow: 0 12px 28px rgba(0,0,0,.32);
       min-width:0;
+    }
+
+    .sysOnly .t1{ font-size: 18px; }
+    .sysOnly .dot{
+      font-size: 14px;
+      opacity: .82;
+      transform: translateY(-1px);
+    }
+    .sysOnly .t2{
+      font-size: 18px;
+      padding: 3px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 10px 20px rgba(0,0,0,.14);
+    }
+
+    .devCard{
+      flex:0 0 auto;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-end;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(6, 35, 63, 0.88);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      user-select:none;
+      min-width: 170px;
+    }
+    .devCard .nome{
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .8px;
+      text-transform:uppercase;
+      margin-bottom:2px;
+    }
+    .devCard .cargo{
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      color: rgba(255,255,255,.78);
+      text-transform:uppercase;
+    }
+
+    main{
+      flex:1 1 auto;
+      min-height:0;
+      display:flex;
+      overflow:hidden;
+    }
+
+    .glass{
+      width: 100%;
+      height: 100%;
+      border-radius: 26px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow:hidden;
+      display:flex;
+    }
+
+    .panel{
+      width:100%;
+      height:100%;
+      min-height:0;
+      padding: 14px 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      overflow:hidden;
+    }
+
+    .panelTitle{
+      margin:0;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color:#fff;
+      text-shadow: 0 10px 24px rgba(0,0,0,.30);
+      line-height:1.05;
+    }
+
+    /* ✅ chips 100% na mesma linha */
+    .guideLine{
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.09);
+      box-shadow: var(--shadow2);
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 900;
+      color: rgba(255,255,255,.92);
+      letter-spacing: .7px;
+      flex-wrap:nowrap;
+      overflow:auto;
+      scrollbar-width: thin;
+    }
+
+    .guideLine::-webkit-scrollbar{ height:7px; }
+    .guideLine::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.22); border-radius:999px; }
+
+    .guideLine .tag{
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.12);
+      white-space: nowrap;
+      color:#fff;
+      font-size: 13px;
+      flex:0 0 auto;
+    }
+    .guideLine .sep{
+      opacity:.55;
+      font-weight:900;
+      color: rgba(255,255,255,.75);
+      flex:0 0 auto;
+    }
+
+    textarea{
+      width:100%;
+      flex: 1 1 auto;
+      min-height: 260px;
+      resize:none;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.14);
+      box-shadow: 0 12px 22px rgba(0,0,0,.14);
+      padding: 14px;
+      outline:none;
+      font-size: 15px;
+      color:#fff;
+      line-height: 1.35;
+      overflow:auto;
+    }
+    textarea::placeholder{ color: rgba(255,255,255,.64); }
+
+    .btn{
+      flex:0 0 auto;
+      align-self:center;
+      width: 100%;
+      border:none;
+      border-radius: 18px;
+      padding: 12px 16px;
+      cursor:pointer;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      color:#041b2f;
+      background: linear-gradient(90deg, #00e09c, #1376b8);
+      box-shadow: 0 16px 26px rgba(0,0,0,.18);
+      transition: transform .08s ease, filter .2s ease;
+    }
+    .btn:hover{ filter: brightness(1.03); }
+    .btn:active{ transform: translateY(1px); }
+
+    /* ✅ DIREITA */
+    .right{
       height:100%;
       border-radius: 26px;
       border: 1px solid rgba(255,255,255,.18);
@@ -96,7 +282,8 @@
 
     .rightTop{
       flex:0 0 auto;
-      padding: 10px 12px;
+      height:46px;
+      padding: 10px 14px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -115,205 +302,28 @@
       flex:1 1 auto;
       min-height:0;
       background: rgba(0,0,0,.10);
+      padding: 10px;
     }
 
+    /* ✅ iframe encaixado como “folha” */
     #iframeLaudo{
       width:100%;
       height:100%;
       border:0;
       display:block;
       background:#fff;
-    }
-
-    header{
-      flex:0 0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .sysOnly{
-      margin:0;
-      display:flex;
-      align-items:baseline;
-      gap:10px;
-      flex-wrap:wrap;
-      font-weight:900;
-      letter-spacing:.9px;
-      text-transform:uppercase;
-      color:#fff;
-      text-shadow: 0 12px 28px rgba(0,0,0,.32);
-    }
-
-    .sysOnly .t1{ font-size: 20px; }
-    .sysOnly .dot{
-      font-size: 14px;
-      opacity: .82;
-      transform: translateY(-1px);
-    }
-    .sysOnly .t2{
-      font-size: 20px;
-      padding: 3px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.16);
-      box-shadow: 0 10px 20px rgba(0,0,0,.14);
-    }
-
-    .devCard{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:2px;
-      padding: 7px 12px;
-      border-radius: 14px;
-      background: rgba(6, 35, 63, 0.88);
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 10px 20px rgba(0,0,0,.18);
-      user-select:none;
-    }
-    .devCard .nome{
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .8px;
-      color:#fff;
-      text-transform:uppercase;
-    }
-    .devCard .cargo{
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: .8px;
-      color: rgba(255,255,255,.78);
-      text-transform:uppercase;
-    }
-
-    main{
-      flex: 1 1 auto;
-      min-height: 0;
-      display:flex;
-      align-items:stretch;
-      justify-content:center;
-      padding-top: 10px;
-    }
-
-    .glass{
-      width: 100%;
-      max-width: 1180px;
-      height: auto;
-      min-height: 0;
-      max-height: calc(100vh - 110px);
-      border-radius: 26px;
-      border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      overflow: hidden;
-      display:flex;
-    }
-
-    .panel{
-      width:100%;
-      height:100%;
-      min-height:0;
-      padding: 14px 16px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-      overflow:auto;
-    }
-
-    .panelTitle{
-      margin:0;
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color:#fff;
-      text-shadow: 0 10px 24px rgba(0,0,0,.30);
-      line-height:1.05;
-    }
-
-    .guideLine{
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.09);
-      box-shadow: var(--shadow2);
-      display:flex;
-      align-items:center;
-      flex-wrap:wrap;
-      gap: 10px;
-      font-weight: 900;
-      color: rgba(255,255,255,.92);
-      letter-spacing: .7px;
-      flex: 0 0 auto;
-    }
-    .guideLine .tag{
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.12);
-      white-space: nowrap;
-      color:#fff;
-      font-size: 13px;
-    }
-    .guideLine .sep{
-      opacity:.55;
-      font-weight:900;
-      color: rgba(255,255,255,.75);
-    }
-
-    textarea{
-      width:100%;
-      flex: 1 1 auto;
-      min-height: 220px;
-      max-height: 360px;
-      resize:none;
       border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.14);
-      box-shadow: 0 12px 22px rgba(0,0,0,.14);
-      padding: 14px;
-      outline:none;
-      font-size: 15px;
-      color:#fff;
-      line-height: 1.35;
-      overflow:auto;
+      box-shadow: 0 16px 30px rgba(0,0,0,.18);
     }
-    textarea::placeholder{ color: rgba(255,255,255,.64); }
 
-    .btn{
-      flex:0 0 auto;
-      align-self: center;
-      width: min(680px, 92%);
-      border:none;
-      border-radius: 18px;
-      padding: 12px 16px;
-      cursor:pointer;
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: .3px;
-      color:#041b2f;
-      background: linear-gradient(90deg, #00e09c, #1376b8);
-      box-shadow: 0 16px 26px rgba(0,0,0,.18);
-      transition: transform .08s ease, filter .2s ease;
-    }
-    .btn:hover{ filter: brightness(1.03); }
-    .btn:active{ transform: translateY(1px); }
-
+    /* ✅ RESPONSIVO */
     @media (max-width: 1180px){
-      .app{ grid-template-columns: 1fr; padding: 12px; }
+      html,body{ overflow:auto !important; }
+      .app{ grid-template-columns: 1fr; height:auto; overflow:auto; }
       .right{ height: 62vh; }
-      main{ padding-top: 12px; }
-      .glass{ max-height: none; }
-      textarea{ max-height: 420px; }
+      main{ height: calc(100vh - 120px); }
     }
 
-    @media (max-width: 520px){
-      textarea{ min-height: 240px; }
-    }
   </style>
 </head>
 
@@ -477,7 +487,7 @@
       if(dados.responsavel)     params.set("responsavel", dados.responsavel);
       if(dados.observacao)      params.set("observacao", dados.observacao);
 
-      // ✅ CACHE-BUSTER DEFINITIVO
+      // ✅ CACHE-BUSTER
       params.set("v", Date.now());
 
       $("iframeLaudo").src = `${LAUDO_URL}?${params.toString()}`;
@@ -520,103 +530,6 @@
         $("textoDigitacao").focus();
       }
     });
-
-    /* =========================================================
-       ✅ PWA / SERVICE WORKER com aviso elegante de atualização
-       - Detecta nova versão (commit novo)
-       - Mostra: “Nova versão disponível — Atualizar”
-       ========================================================= */
-    (function () {
-      if (!("serviceWorker" in navigator)) return;
-
-      function criarBarraUpdate(onClick) {
-        if (document.getElementById("swUpdateBar")) return;
-
-        const bar = document.createElement("div");
-        bar.id = "swUpdateBar";
-        bar.style.position = "fixed";
-        bar.style.right = "16px";
-        bar.style.top = "16px";
-        bar.style.zIndex = "99999";
-        bar.style.padding = "10px 12px";
-        bar.style.borderRadius = "999px";
-        bar.style.border = "1px solid rgba(255,255,255,.20)";
-        bar.style.background = "rgba(6,35,63,.92)";
-        bar.style.boxShadow = "0 12px 26px rgba(0,0,0,.25)";
-        bar.style.backdropFilter = "blur(8px)";
-        bar.style.webkitBackdropFilter = "blur(8px)";
-        bar.style.display = "flex";
-        bar.style.alignItems = "center";
-        bar.style.gap = "10px";
-        bar.style.color = "#fff";
-        bar.style.fontFamily = "Arial, sans-serif";
-        bar.style.fontWeight = "900";
-        bar.style.letterSpacing = ".02em";
-        bar.style.userSelect = "none";
-
-        const msg = document.createElement("span");
-        msg.textContent = "Nova versão disponível — Atualizar";
-        msg.style.fontSize = "12px";
-        msg.style.opacity = "0.95";
-
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = "ATUALIZAR";
-        btn.style.border = "none";
-        btn.style.cursor = "pointer";
-        btn.style.padding = "8px 12px";
-        btn.style.borderRadius = "999px";
-        btn.style.fontWeight = "900";
-        btn.style.letterSpacing = ".04em";
-        btn.style.background = "linear-gradient(90deg, #00e09c, #1376b8)";
-        btn.style.color = "#06233f";
-        btn.style.boxShadow = "0 10px 18px rgba(0,0,0,.20)";
-
-        btn.addEventListener("click", onClick);
-
-        bar.appendChild(msg);
-        bar.appendChild(btn);
-        document.body.appendChild(bar);
-      }
-
-      window.addEventListener("load", async () => {
-        try {
-          const reg = await navigator.serviceWorker.register("./service-worker.js");
-
-          // Se já existe update esperando
-          if (reg.waiting) {
-            criarBarraUpdate(() => {
-              reg.waiting.postMessage({ type: "SKIP_WAITING" });
-            });
-          }
-
-          // Quando encontra SW novo
-          reg.addEventListener("updatefound", () => {
-            const newWorker = reg.installing;
-            if (!newWorker) return;
-
-            newWorker.addEventListener("statechange", () => {
-              if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-                criarBarraUpdate(() => {
-                  newWorker.postMessage({ type: "SKIP_WAITING" });
-                });
-              }
-            });
-          });
-
-          // Quando o SW novo assume, recarrega
-          let refreshing = false;
-          navigator.serviceWorker.addEventListener("controllerchange", () => {
-            if (refreshing) return;
-            refreshing = true;
-            window.location.reload();
-          });
-
-        } catch (e) {
-          console.warn("Falha ao registrar service worker:", e);
-        }
-      });
-    })();
   </script>
 </body>
 </html>
