@@ -25,6 +25,7 @@
       margin:0;
       padding:0;
       overflow:hidden !important;
+      overflow-x:hidden !important; /* ✅ mata barra horizontal */
     }
 
     body{
@@ -58,7 +59,6 @@
       z-index:0;
     }
 
-    /* ✅ LAYOUT (igual mock / travado) */
     .app{
       position:relative;
       z-index:1;
@@ -73,13 +73,13 @@
 
     .left, .right{ min-width:0; }
 
-    /* ✅ ESQUERDA */
     .left{
       height:100%;
       display:flex;
       flex-direction:column;
       gap: 12px;
       overflow:hidden;
+      min-width:0;
     }
 
     header{
@@ -90,6 +90,7 @@
       justify-content:space-between;
       gap:12px;
       padding: 0 2px;
+      min-width:0;
     }
 
     .sysOnly{
@@ -169,6 +170,7 @@
       -webkit-backdrop-filter: blur(14px);
       overflow:hidden;
       display:flex;
+      min-width:0;
     }
 
     .panel{
@@ -179,7 +181,9 @@
       display:flex;
       flex-direction:column;
       gap: 12px;
-      overflow:hidden;
+      overflow-y:auto;    /* ✅ só vertical */
+      overflow-x:hidden;  /* ✅ mata barra horizontal */
+      min-width:0;
     }
 
     .panelTitle{
@@ -193,7 +197,6 @@
       line-height:1.05;
     }
 
-    /* ✅ chips 100% na mesma linha */
     .guideLine{
       padding: 10px 12px;
       border-radius: 16px;
@@ -207,12 +210,9 @@
       color: rgba(255,255,255,.92);
       letter-spacing: .7px;
       flex-wrap:nowrap;
-      overflow:auto;
-      scrollbar-width: thin;
+      overflow-x:hidden; /* ✅ nunca barra */
+      min-width:0;
     }
-
-    .guideLine::-webkit-scrollbar{ height:7px; }
-    .guideLine::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.22); border-radius:999px; }
 
     .guideLine .tag{
       padding: 6px 12px;
@@ -268,7 +268,6 @@
     .btn:hover{ filter: brightness(1.03); }
     .btn:active{ transform: translateY(1px); }
 
-    /* ✅ DIREITA */
     .right{
       height:100%;
       border-radius: 26px;
@@ -278,6 +277,7 @@
       overflow:hidden;
       display:flex;
       flex-direction:column;
+      min-width:0;
     }
 
     .rightTop{
@@ -303,9 +303,10 @@
       min-height:0;
       background: rgba(0,0,0,.10);
       padding: 10px;
+      overflow:hidden;
+      min-width:0;
     }
 
-    /* ✅ iframe encaixado como “folha” */
     #iframeLaudo{
       width:100%;
       height:100%;
@@ -316,7 +317,6 @@
       box-shadow: 0 16px 30px rgba(0,0,0,.18);
     }
 
-    /* ✅ RESPONSIVO */
     @media (max-width: 1180px){
       html,body{ overflow:auto !important; }
       .app{ grid-template-columns: 1fr; height:auto; overflow:auto; }
@@ -324,6 +324,39 @@
       main{ height: calc(100vh - 120px); }
     }
 
+    /* =========================================
+       ✅ ANOTAÇÕES / GUIA DE AJUSTE (discretas)
+       - reduz o tamanho
+       - mantém legível
+    ========================================= */
+    .note,
+    .anotacao,
+    .guia,
+    [data-note],
+    .instrucao{
+      font-size:10px !important;
+      line-height:1.2 !important;
+      font-weight:800 !important;
+      letter-spacing:.02em !important;
+      text-transform:uppercase !important;
+
+      opacity:.55 !important;
+      color: rgba(255,255,255,.86) !important;
+
+      padding:4px 8px !important;
+      border-radius:10px !important;
+      background: rgba(0,0,0,.18) !important;
+      border:1px solid rgba(255,255,255,.12) !important;
+
+      max-width:420px !important;
+    }
+
+    .note-arrow,
+    .seta,
+    .arrow{
+      transform: scale(.75) !important;
+      opacity:.55 !important;
+    }
   </style>
 </head>
 
@@ -487,9 +520,7 @@
       if(dados.responsavel)     params.set("responsavel", dados.responsavel);
       if(dados.observacao)      params.set("observacao", dados.observacao);
 
-      // ✅ CACHE-BUSTER
       params.set("v", Date.now());
-
       $("iframeLaudo").src = `${LAUDO_URL}?${params.toString()}`;
     }
 
