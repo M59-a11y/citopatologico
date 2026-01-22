@@ -1,16 +1,19 @@
 /* =========================================================
-   ✅ AJUSTE COMPLETO DE VISUALIZAÇÃO (SISTEMA)
-   - equivalente ao ZOOM 90% do navegador
-   - remove negrito exagerado
-   - reduz fonte levemente e melhora consistência
+   ✅ CSS COMPLETO FINAL — SISTEMA + LAUDO + IMPRESSÃO
+   - Um arquivo só (style.css)
+   - Ajustes do Laudo conforme PDF
+   - Impressão corrigida (A4)
+   - Remove negrito Convênio → Responsável
    ========================================================= */
 
-/* 1) Escala global do sistema (equivalente a zoom 90%) */
+
+/* =========================================================
+   0) AJUSTE GLOBAL DO SISTEMA (equivalente a ZOOM 90%)
+   ========================================================= */
 html{
   font-size: 90% !important;
 }
 
-/* 2) Base do texto: sem negrito exagerado + melhor renderização */
 body{
   font-weight: 400 !important;
   -webkit-font-smoothing: antialiased;
@@ -18,7 +21,7 @@ body{
   text-rendering: geometricPrecision;
 }
 
-/* 3) Remove negrito exagerado de textos e rótulos */
+/* remove negrito exagerado do sistema */
 label,
 legend,
 .titulo,
@@ -34,84 +37,269 @@ a{
   font-weight: 400 !important;
 }
 
-/* 4) Strong/b: reduz peso (não deixa tudo 700/800) */
-strong,
-b{
-  font-weight: 500 !important; /* leve destaque */
+/* strong/b do sistema com destaque leve */
+strong, b{
+  font-weight: 500 !important;
 }
 
-/* 5) Títulos com leve destaque (sem exagero) */
-h1{
-  font-size: 1.35rem !important;
-  font-weight: 600 !important;
-}
-h2{
-  font-size: 1.15rem !important;
-  font-weight: 600 !important;
-}
-h3{
-  font-size: 1.05rem !important;
-  font-weight: 600 !important;
-}
+/* títulos com leve destaque */
+h1{ font-size: 1.35rem !important; font-weight: 600 !important; }
+h2{ font-size: 1.15rem !important; font-weight: 600 !important; }
+h3{ font-size: 1.05rem !important; font-weight: 600 !important; }
 
-/* 6) Campos e botões padronizados */
-input,
-select,
-textarea,
-button{
+input, select, textarea, button{
   font-size: 1rem !important;
   font-weight: 400 !important;
 }
 
-/* 7) Labels (DC/CN/TEL/RUA/CEP etc): menores e naturais */
-label,
-.form-label{
-  font-size: .95rem !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-}
-
-/* 8) Compactação leve (reduz altura geral da tela) */
-.form-group,
-.campo,
-.field,
-.row,
-.linha{
-  margin-bottom: .45rem !important;
-}
-
-
-/* =========================================================
-   ✅ ANOTAÇÕES / GUIA DE AJUSTE (discretas)
-   - reduz o tamanho
-   - mantém legível
-   ========================================================= */
+/* notas/anotações discretas */
 .note,
 .anotacao,
 .guia,
 [data-note],
-.instrucao {
-  font-size: 9px !important;        /* menor */
+.instrucao{
+  font-size: 9px !important;
   line-height: 1.15 !important;
-  font-weight: 400 !important;      /* remove negrito */
-  letter-spacing: 0 !important;     /* mais natural */
-  text-transform: none !important;  /* tira caixa alta */
-
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
   opacity: .55 !important;
   color: rgba(255,255,255,.86) !important;
-
   padding: 3px 7px !important;
   border-radius: 10px !important;
   background: rgba(0,0,0,.16) !important;
   border: 1px solid rgba(255,255,255,.10) !important;
-
   max-width: 420px !important;
 }
 
-/* ✅ setas (se tiver) */
 .note-arrow,
 .seta,
-.arrow {
+.arrow{
   transform: scale(.70) !important;
   opacity: .55 !important;
+}
+
+
+/* =========================================================
+   ✅ 1) AJUSTE COMPLETO DO LAUDO (TELA)
+   ========================================================= */
+
+/* Escopo do laudo: aplica somente se existir #laudo ou .laudo */
+#laudo, .laudo, .laudo-page, .laudo-container{
+  font-size: 12.5px !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+  color: #111 !important;
+  background: #fff !important;
+}
+
+#laudo *, .laudo *, .laudo-page *, .laudo-container *{
+  box-sizing: border-box !important;
+}
+
+/* elimina topo alto / empurrão */
+#laudo .topo, #laudo .header, #laudo .cabecalho, #laudo .cabecalho-laudo, #laudo .titulo-laudo,
+.laudo .topo, .laudo .header, .laudo .cabecalho, .laudo .cabecalho-laudo, .laudo .titulo-laudo,
+.laudo-page .topo, .laudo-page .header, .laudo-page .cabecalho, .laudo-page .cabecalho-laudo, .laudo-page .titulo-laudo,
+.laudo-container .topo, .laudo-container .header, .laudo-container .cabecalho, .laudo-container .cabecalho-laudo, .laudo-container .titulo-laudo{
+  margin: 0 !important;
+  padding: 0 0 6mm 0 !important;
+}
+
+/* remove negrito do laudo em geral */
+#laudo b, #laudo strong,
+.laudo b, .laudo strong,
+.laudo-page b, .laudo-page strong,
+.laudo-container b, .laudo-container strong{
+  font-weight: 500 !important;
+}
+
+/* títulos do laudo */
+#laudo h1, #laudo h2, #laudo h3,
+.laudo h1, .laudo h2, .laudo h3,
+.laudo-page h1, .laudo-page h2, .laudo-page h3,
+.laudo-container h1, .laudo-container h2, .laudo-container h3{
+  font-weight: 600 !important;
+  margin: 0 0 2mm 0 !important;
+}
+
+#laudo h1, .laudo h1, .laudo-page h1, .laudo-container h1{ font-size: 15px !important; }
+#laudo h2, .laudo h2, .laudo-page h2, .laudo-container h2{ font-size: 13px !important; }
+#laudo h3, .laudo h3, .laudo-page h3, .laudo-container h3{ font-size: 12.5px !important; }
+
+/* linha verde do PDF */
+#laudo .linha-verde, #laudo .hr-verde, #laudo .divisor-verde,
+.laudo .linha-verde, .laudo .hr-verde, .laudo .divisor-verde,
+.laudo-page .linha-verde, .laudo-page .hr-verde, .laudo-page .divisor-verde,
+.laudo-container .linha-verde, .laudo-container .hr-verde, .laudo-container .divisor-verde{
+  height: 2px !important;
+  background: #1aa34a !important;
+  border: 0 !important;
+  margin: 6mm 0 4mm 0 !important;
+}
+
+/* =========================================================
+   ✅ 2) PRINCIPAL: CONVÊNIO → RESPONSÁVEL SEM NEGRITO
+   ========================================================= */
+#laudo .bloco-convenio,
+#laudo .dados-convenio,
+#laudo #convenio,
+#laudo #dadosConvenio,
+#laudo .convenio-responsavel,
+#laudo .bloco-dados-exame,
+.laudo .bloco-convenio,
+.laudo .dados-convenio,
+.laudo #convenio,
+.laudo #dadosConvenio,
+.laudo .convenio-responsavel,
+.laudo .bloco-dados-exame,
+.laudo-page .bloco-convenio,
+.laudo-page .dados-convenio,
+.laudo-page #convenio,
+.laudo-page #dadosConvenio,
+.laudo-page .convenio-responsavel,
+.laudo-page .bloco-dados-exame,
+.laudo-container .bloco-convenio,
+.laudo-container .dados-convenio,
+.laudo-container #convenio,
+.laudo-container #dadosConvenio,
+.laudo-container .convenio-responsavel,
+.laudo-container .bloco-dados-exame{
+  font-weight: 400 !important;
+}
+
+/* remove bold em tudo dentro dele */
+#laudo .bloco-convenio b, #laudo .bloco-convenio strong,
+#laudo .dados-convenio b, #laudo .dados-convenio strong,
+#laudo #convenio b, #laudo #convenio strong,
+#laudo #dadosConvenio b, #laudo #dadosConvenio strong,
+#laudo .convenio-responsavel b, #laudo .convenio-responsavel strong,
+#laudo .bloco-dados-exame b, #laudo .bloco-dados-exame strong,
+.laudo .bloco-convenio b, .laudo .bloco-convenio strong,
+.laudo .dados-convenio b, .laudo .dados-convenio strong,
+.laudo #convenio b, .laudo #convenio strong,
+.laudo #dadosConvenio b, .laudo #dadosConvenio strong,
+.laudo .convenio-responsavel b, .laudo .convenio-responsavel strong,
+.laudo .bloco-dados-exame b, .laudo .bloco-dados-exame strong{
+  font-weight: 400 !important;
+}
+
+/* =========================================================
+   ✅ 3) ALINHAR OPÇÕES (SIM/NÃO, SAT/INSAT etc) NA MESMA LINHA
+   ========================================================= */
+#laudo .opcoes,
+#laudo .opcoes-inline,
+#laudo .radio-inline,
+#laudo .check-inline,
+#laudo .sim-nao,
+#laudo .satisfacao,
+.laudo .opcoes,
+.laudo .opcoes-inline,
+.laudo .radio-inline,
+.laudo .check-inline,
+.laudo .sim-nao,
+.laudo .satisfacao{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 10px 18px !important;
+}
+
+#laudo .opcoes label,
+#laudo .opcoes-inline label,
+#laudo .radio-inline label,
+#laudo .check-inline label,
+#laudo .sim-nao label,
+#laudo .satisfacao label,
+.laudo .opcoes label,
+.laudo .opcoes-inline label,
+.laudo .radio-inline label,
+.laudo .check-inline label,
+.laudo .sim-nao label,
+.laudo .satisfacao label{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-weight: 400 !important;
+}
+
+/* =========================================================
+   ✅ 4) TABELAS / BLOCOS NO LAUDO (compactar + não quebrar feio)
+   ========================================================= */
+#laudo table, .laudo table, .laudo-page table, .laudo-container table{
+  width: 100 !important;
+  border-collapse: collapse !important;
+}
+
+#laudo td, #laudo th,
+.laudo td, .laudo th,
+.laudo-page td, .laudo-page th,
+.laudo-container td, .laudo-container th{
+  padding: 1.2mm 1.6mm !important;
+  vertical-align: top !important;
+}
+
+/* não cortar conteúdo ao imprimir */
+#laudo .no-break, .laudo .no-break, .laudo-page .no-break, .laudo-container .no-break{
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
+
+/* =========================================================
+   ✅ 5) IMPRESSÃO A4 — imprime somente o laudo
+   ========================================================= */
+@media print{
+  @page{
+    size: A4;
+    margin: 10mm;
+  }
+
+  html, body{
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* some todo o sistema na impressão */
+  header, nav, .navbar, .menu, .sidebar, .topbar, .rodape-sistema,
+  .page-header, .main-header, .main-menu, .side-menu, .footer{
+    display: none !important;
+  }
+
+  /* deixa somente o laudo impresso */
+  #laudo, .laudo, .laudo-page, .laudo-container{
+    width: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  /* evita sombras e efeitos */
+  *{
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  table, tr, td, th{
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .no-break{
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* linha verde permanece */
+  .linha-verde, .hr-verde, .divisor-verde{
+    background: #1aa34a !important;
+  }
 }
