@@ -32,8 +32,11 @@ body {
   right: -15%;                 /* vem da direita */
   top: 52%;
   transform: translateY(-50%);
-  background: url("./img/logo-fundo.png") no-repeat center center;
+
+  /* ✅ IMAGEM DENTRO DA PASTA logo/ */
+  background: url("logo/logotipo.png") no-repeat center center;
   background-size: contain;
+
   opacity: 0.18;               /* transparência */
   filter: contrast(1.1) saturate(1.1);
 }
