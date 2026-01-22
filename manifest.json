@@ -1,1 +1,20 @@
-{}
+{
+  "name": "SI — Sistema de Informação • Laudos",
+  "short_name": "SI Laudos",
+  "description": "Sistema de digitação rápida e emissão de laudos citopatológicos.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#06233f",
+  "theme_color": "#0e4d7d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "logo/logotipo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
