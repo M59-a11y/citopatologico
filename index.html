@@ -516,7 +516,103 @@
         $("textoDigitacao").focus();
       }
     });
+
+    /* =========================================================
+       ✅ PWA / SERVICE WORKER com aviso elegante de atualização
+       - Detecta nova versão (commit novo)
+       - Mostra: “Nova versão disponível — Atualizar”
+       ========================================================= */
+    (function () {
+      if (!("serviceWorker" in navigator)) return;
+
+      function criarBarraUpdate(onClick) {
+        if (document.getElementById("swUpdateBar")) return;
+
+        const bar = document.createElement("div");
+        bar.id = "swUpdateBar";
+        bar.style.position = "fixed";
+        bar.style.right = "16px";
+        bar.style.top = "16px";
+        bar.style.zIndex = "99999";
+        bar.style.padding = "10px 12px";
+        bar.style.borderRadius = "999px";
+        bar.style.border = "1px solid rgba(255,255,255,.20)";
+        bar.style.background = "rgba(6,35,63,.92)";
+        bar.style.boxShadow = "0 12px 26px rgba(0,0,0,.25)";
+        bar.style.backdropFilter = "blur(8px)";
+        bar.style.webkitBackdropFilter = "blur(8px)";
+        bar.style.display = "flex";
+        bar.style.alignItems = "center";
+        bar.style.gap = "10px";
+        bar.style.color = "#fff";
+        bar.style.fontFamily = "Arial, sans-serif";
+        bar.style.fontWeight = "900";
+        bar.style.letterSpacing = ".02em";
+        bar.style.userSelect = "none";
+
+        const msg = document.createElement("span");
+        msg.textContent = "Nova versão disponível — Atualizar";
+        msg.style.fontSize = "12px";
+        msg.style.opacity = "0.95";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = "ATUALIZAR";
+        btn.style.border = "none";
+        btn.style.cursor = "pointer";
+        btn.style.padding = "8px 12px";
+        btn.style.borderRadius = "999px";
+        btn.style.fontWeight = "900";
+        btn.style.letterSpacing = ".04em";
+        btn.style.background = "linear-gradient(90deg, #00e09c, #1376b8)";
+        btn.style.color = "#06233f";
+        btn.style.boxShadow = "0 10px 18px rgba(0,0,0,.20)";
+
+        btn.addEventListener("click", onClick);
+
+        bar.appendChild(msg);
+        bar.appendChild(btn);
+        document.body.appendChild(bar);
+      }
+
+      window.addEventListener("load", async () => {
+        try {
+          const reg = await navigator.serviceWorker.register("./service-worker.js");
+
+          // Se já existe update esperando
+          if (reg.waiting) {
+            criarBarraUpdate(() => {
+              reg.waiting.postMessage({ type: "SKIP_WAITING" });
+            });
+          }
+
+          // Quando encontra SW novo
+          reg.addEventListener("updatefound", () => {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+
+            newWorker.addEventListener("statechange", () => {
+              if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                criarBarraUpdate(() => {
+                  newWorker.postMessage({ type: "SKIP_WAITING" });
+                });
+              }
+            });
+          });
+
+          // Quando o SW novo assume, recarrega
+          let refreshing = false;
+          navigator.serviceWorker.addEventListener("controllerchange", () => {
+            if (refreshing) return;
+            refreshing = true;
+            window.location.reload();
+          });
+
+        } catch (e) {
+          console.warn("Falha ao registrar service worker:", e);
+        }
+      });
+    })();
   </script>
 </body>
 </html>
- 
