@@ -1,1 +1,1165 @@
-ok
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Laudo</title>
+
+<style>
+  :root{
+    --blue:#336699;
+    --panel:#eef2f7;
+
+    --bgA:#baf2c7;
+    --bgB:#0a2a47;
+    --bgC:#061a2e;
+
+    --glass:rgba(255,255,255,.12);
+    --glass2:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.18);
+
+    --txt:#f5fbff;
+    --muted:rgba(255,255,255,.78);
+
+    --shadow:0 18px 55px rgba(0,0,0,.30);
+    --shadow2:0 10px 28px rgba(0,0,0,.22);
+
+    --r22:22px;
+
+    --brandGreen:#00e09c;
+    --brandGreen2:#73ff9a;
+
+    --paperBorder: rgba(255,255,255,.26);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+
+  body{
+    margin:0;
+    padding:18px;
+    font-family:"Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(90deg, var(--bgA) 0%, var(--bgB) 60%, var(--bgC) 100%);
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  .watermark{
+    position:fixed;
+    top:70px;
+    right:-20px;
+    width:min(54vw, 860px);
+    height:calc(100vh - 90px);
+    background:url("logo/logotipo.png") no-repeat right center;
+    background-size:contain;
+    opacity:.16;
+    pointer-events:none;
+    z-index:0;
+    filter: saturate(1.15) contrast(1.10) brightness(1.08);
+    mix-blend-mode: screen;
+  }
+
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255,255,255,.14), transparent 44%),
+      radial-gradient(circle at 84% 65%, rgba(115,255,154,.10), transparent 48%),
+      linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.26));
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .shell{
+    max-width:1180px;
+    margin:0 auto;
+    position:relative;
+    z-index:1;
+  }
+
+  .hdr{
+    height:78px;
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    border:1px solid rgba(255,255,255,.16);
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+    border-radius: var(--r22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow2);
+    position:relative;
+    overflow:hidden;
+  }
+
+  .hdr::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background: radial-gradient(circle at 15% 25%, rgba(0,224,156,.16), transparent 42%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .brand{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:320px;
+    position:relative;
+    z-index:1;
+  }
+
+  .brand strong{
+    font-size:18px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:900;
+    color: rgba(255,255,255,.96);
+    text-shadow: 0 12px 28px rgba(0,0,0,.30);
+  }
+  .brand span{
+    font-size:12px;
+    color:rgba(255,255,255,.74);
+    letter-spacing:.06em;
+  }
+
+  .pill{
+    padding:9px 12px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.16);
+    background: rgba(6,35,63,.55);
+    font-size:12px;color:rgba(255,255,255,.90);
+    letter-spacing:.06em;user-select:none;
+    box-shadow: 0 10px 20px rgba(0,0,0,.14);
+    position:relative;
+    z-index:1;
+  }
+
+  .card{
+    margin-top:14px;
+    border-radius: var(--r22);
+    border:1px solid rgba(255,255,255,.20);
+    background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+
+  .card-h{
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    color:var(--txt);
+    position:relative;
+  }
+
+  .card-h::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: linear-gradient(90deg, rgba(0,224,156,.10), rgba(0,0,0,0));
+    pointer-events:none;
+  }
+
+  .card-h h1{
+    margin:0;
+    font-size:14px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-weight:900;
+    position:relative;
+    z-index:1;
+  }
+
+  .card-b{
+    padding:16px;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:16px;
+  }
+
+  .folha{
+    width: 100%;
+    min-height: 297mm;
+    margin:0;
+
+    background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.86));
+    border: 1px solid var(--paperBorder);
+    border-radius: 22px;
+
+    box-shadow:
+      0 22px 56px rgba(0,0,0,.20),
+      inset 0 1px 0 rgba(255,255,255,.70);
+
+    box-sizing:border-box;
+    padding:14mm 18mm;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .folha::before{
+    content:"";
+    position:absolute;
+    inset:-1px;
+    background:
+      radial-gradient(circle at 16% 14%, rgba(0,224,156,.10), transparent 44%),
+      radial-gradient(circle at 90% 62%, rgba(14,77,125,.06), transparent 52%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .folha > *{ position:relative; z-index:1; }
+
+  .actions-bottom{
+    margin-top:14px;
+    display:flex;
+    justify-content:center;
+  }
+  .btn{
+    width:100%;
+    padding:12px;
+    font-weight:900;
+    cursor:pointer;
+    border:none;
+    border-radius:16px;
+  }
+  .btn-print{
+    max-width:440px;
+    background: linear-gradient(90deg, #00e09c, #1376b8);
+    color:#06233f;
+    box-shadow: 0 18px 34px rgba(0,0,0,.22);
+    letter-spacing:.05em;
+  }
+  .btn-print:hover{ filter: brightness(1.04); }
+  .btn-print:active{ transform: translateY(1px); }
+
+  .titulo-laudo{
+    text-align:center;
+    font-weight:900;
+    font-size:13pt;
+    margin: 8px 0 14px;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    color:#05253f;
+    letter-spacing:.04em;
+  }
+
+  .painel{
+    background: rgba(238,242,247,.74);
+    border: 1px solid rgba(6,35,63,.18);
+    border-radius:16px;
+    padding:16px 16px 10px;
+    box-shadow: 0 14px 28px rgba(0,0,0,.10);
+  }
+
+  .sec{
+    border-top: 1px solid rgba(6,35,63,.14);
+    padding-top:12px;
+    margin-top:12px;
+  }
+  .sec:first-child{ border-top:none; padding-top:0; margin-top:0; }
+
+  .sec-title{
+    color: #00a651;
+    font-weight:900;
+    font-size:11pt;
+    text-transform:uppercase;
+    margin:0 0 8px;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    letter-spacing:.03em;
+  }
+
+  .linha{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+    align-items:center;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11pt;
+    color:#05253f;
+  }
+
+  .lbl{
+    font-weight:900;
+    text-transform:uppercase;
+    min-width:160px;
+    color:#05253f;
+  }
+
+  .op-row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .op-row label,
+  .op-col label{
+    display:flex;
+    gap:8px;
+    cursor:pointer;
+    font-weight:400;
+    align-items:flex-start;
+    color:#05253f;
+  }
+
+  input[type="radio"], input[type="checkbox"]{
+    transform: translateY(2px);
+    accent-color: #00a651;
+  }
+
+  .op-col{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:8px;
+  }
+  .grupo{
+    margin-left:18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:6px;
+  }
+
+  .obs-wrap{
+    margin-top:12px;
+    background: rgba(233,239,247,.78);
+    border: 1px dashed rgba(6,35,63,.28);
+    border-radius:16px;
+    padding:12px;
+    box-shadow: 0 12px 24px rgba(0,0,0,.08);
+  }
+  .obs-title{
+    font-weight:900;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:12pt;
+    margin-bottom:8px;
+    color:#05253f;
+  }
+  #obs_texto_tela{
+    width:100%;
+    min-height:110px;
+    resize:vertical;
+    padding:12px;
+    border-radius:14px;
+    border:1px solid rgba(6,35,63,.18);
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11pt;
+    box-sizing:border-box;
+    outline:none;
+    background: rgba(255,255,255,.92);
+    color:#05253f;
+  }
+  #obs_texto_tela:focus{
+    border-color: rgba(0,166,81,.55);
+    box-shadow: 0 0 0 4px rgba(0,166,81,.14);
+  }
+
+  .print-only{ display:none; }
+
+  .print-top-info{
+    display:none;
+    position:absolute;
+    top:14mm;
+    right:18mm;
+    width:175px;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:9pt;
+    line-height:1.35;
+    text-transform:uppercase;
+    z-index:5;
+  }
+  .print-top-info .row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .print-top-info .row span:last-child{
+    font-weight:700;
+  }
+
+  .legal-box{
+    margin-top:10px;
+    border: 2px solid #00a651;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:9pt;
+    text-transform:uppercase;
+    text-align:justify;
+    line-height:1.35;
+  }
+
+  @media print{
+    body{ background:#fff; padding:0; margin:0; }
+    body::after{ content:none !important; display:none !important; }
+    .watermark{ display:none !important; }
+    .hdr, .card{ display:none !important; }
+
+    .no-print{ display:none !important; }
+    .print-only{ display:block !important; }
+    .print-top-info{ display:block !important; }
+
+    .folha::before{ content:none !important; display:none !important; }
+
+    .print-bg{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+      pointer-events:none;
+    }
+    .print-bg img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity: .26 !important;
+      filter: contrast(1.05) brightness(1.18) saturate(.95) !important;
+    }
+
+    .print-seal{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:1;
+      pointer-events:none;
+      opacity:.08;
+    }
+    .print-seal img{
+      width: 420px;
+      max-width: 70%;
+      height:auto;
+      filter: contrast(1.05) saturate(1.05);
+    }
+
+    .print-page{
+      position:relative;
+      z-index:2;
+      margin: 0;
+      padding: 50mm 18mm 42mm 18mm; /* ✅ espaço para rodapé */
+      box-sizing:border-box;
+      font-family:"Arial Narrow", Arial, sans-serif;
+    }
+
+    .folha{
+      box-shadow:none !important;
+      width:auto !important;
+      min-height:auto !important;
+      padding:0 !important;
+      border-radius:0 !important;
+      background:#fff !important;
+      border:none !important;
+    }
+
+    @page{ size:A4; margin:0; }
+
+    /* ✅ Rodapé fixo institucional */
+    .print-footer{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 32mm;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .print-footer img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .cab-paciente{
+    border-top: 3px solid #00a651;
+    border-bottom: 3px solid #00a651;
+    padding: 12px 0;
+    margin: 0 0 18px;
+  }
+  .cab-row1{ display:flex; justify-content:space-between; gap:24px; }
+  .cab-left{ flex:1; }
+  .cab-right{ min-width:240px; text-align:right; }
+
+  .cab-lbl2{
+    font-size:11pt;
+    font-weight:800;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+  }
+
+  .cab-nome{
+    font-size:14.5pt;
+    font-weight:900;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    line-height:1.15;
+    margin-top:2px;
+  }
+  .cab-exame{
+    font-size:13.8pt;
+    font-weight:900;
+    text-transform:uppercase;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    line-height:1.15;
+    margin-top:2px;
+  }
+
+  .cab-row2{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 6px 60px;
+    font-family:"Arial Narrow";
+    font-size:8.4pt;
+    text-transform:uppercase;
+    font-weight:400;
+  }
+
+  .linha-identificacao{
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11.5pt;
+    text-transform:uppercase;
+    margin-bottom:5px;
+    display:flex;
+    gap:6px;
+    align-items:baseline;
+    white-space:nowrap;
+  }
+
+  .secao-print{
+    margin: 14px 0 14px;
+    line-height:1.65;
+    font-family:"Arial Narrow", sans-serif;
+    font-size:11.7pt;
+    text-align:justify;
+  }
+
+  .tit-negrito{
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+  }
+  .tit-normal-caps{
+    font-weight:500;
+    text-transform:uppercase;
+  }
+
+  #p_res_diag{
+    display:inline;
+    margin-left:6px;
+  }
+
+  .concl-resposta-bloco{
+    white-space:pre-line;
+    font-weight:500;
+    display:block;
+    margin-top:4px;
+    padding-left:6px;
+  }
+
+  #obs_print{
+    white-space: pre-line;
+    display:block;
+    margin-top:4px;
+    padding-left:6px;
+  }
+  #obs_print_wrap{ display:block; }
+  #obs_print_wrap.vazio{ display:none; }
+
+  .rodape-prof{
+    margin-top:18px;
+    text-align:center;
+    font-family:"Arial Narrow", Arial, sans-serif;
+    font-size:11.5pt;
+  }
+
+  .assinatura-wrap{
+    display:flex;
+    justify-content:center;
+    margin: 14px 0 10px;
+  }
+  .assinatura-img{
+    width: 205px;
+    height:auto;
+    object-fit:contain;
+    display:block;
+  }
+</style>
+</head>
+
+<body>
+<div class="watermark" aria-hidden="true"></div>
+
+<div class="shell">
+  <div class="hdr no-print">
+    <div class="brand">
+      <strong>LAUDO • DIGITAÇÃO</strong>
+      <span>SI — Sistema de Informação • Laudos</span>
+    </div>
+    <div class="pill">Tela do Laudo</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h no-print">
+      <h1>LAUDO DO EXAME CITOPATOLÓGICO</h1>
+      <div class="pill">Somente visual • Funções intactas</div>
+    </div>
+
+    <div class="card-b">
+      <div class="folha">
+
+        <div class="no-print">
+          <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
+
+          <div class="painel">
+            <!-- 1 -->
+            <div class="sec">
+              <div class="sec-title">1. Avaliação Pré Analítica</div>
+
+              <div class="linha">
+                <div class="lbl">Adequabilidade:</div>
+                <div class="op-row">
+                  <label><input type="radio" name="adeq" value="Satisfatória" onchange="atualizar()"> Satisfatória</label>
+                  <label><input type="radio" name="adeq" value="Insatisfatória" onchange="atualizar()"> Insatisfatória</label>
+                </div>
+              </div>
+
+              <div class="linha">
+                <div class="lbl">Epitélios:</div>
+                <div class="op-row">
+                  <label><input type="checkbox" class="epi" value="ESCAMOSO" onchange="atualizar()"> Escamoso</label>
+                  <label><input type="checkbox" class="epi" value="GLANDULAR" onchange="atualizar()"> Glandular</label>
+                  <label><input type="checkbox" class="epi" value="METAPLÁSICO" onchange="atualizar()"> Metaplásico</label>
+                </div>
+              </div>
+
+              <div class="linha">
+                <div class="lbl">Zona de Transformação:</div>
+                <div class="op-row">
+                  <label><input type="radio" name="zona" id="zona_sim" value="Sim" onchange="atualizar()"> Sim</label>
+                  <label><input type="radio" name="zona" id="zona_nao" value="Não" onchange="atualizar()"> Não</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="sec">
+              <div class="sec-title">2. Diagnóstico Descritivo</div>
+
+              <div class="op-col">
+                <label><input type="checkbox" id="chk_norm" onchange="atualizar()"> DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">ALTERAÇÕES CELULARES BENIGNAS:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="checkbox" class="alt" value="Inflamação" onchange="atualizar()"> Inflamação</label>
+                <label><input type="checkbox" class="alt" value="Metaplasia escamosa imatura" onchange="atualizar()"> Metaplasia escamosa imatura</label>
+                <label><input type="checkbox" class="alt" value="Reparação" onchange="atualizar()"> Reparação</label>
+                <label><input type="checkbox" class="alt" value="Atrofia com inflamação" onchange="atualizar()"> Atrofia com inflamação</label>
+                <label><input type="checkbox" class="alt" value="Radiação" onchange="atualizar()"> Radiação</label>
+              </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="sec">
+              <div class="sec-title">3. Microbiologia</div>
+              <div class="grupo" style="margin-left:0;">
+                <label><input type="checkbox" class="micro" value="Lactobacillus sp" onchange="atualizar()"> Lactobacillus sp</label>
+                <label><input type="checkbox" class="micro" value="Cocos" onchange="atualizar()"> Cocos</label>
+                <label><input type="checkbox" class="micro" value="Sugestivo de Chlamydia sp" onchange="atualizar()"> Sugestivo de Chlamydia sp</label>
+                <label><input type="checkbox" class="micro" value="Actinomyces sp" onchange="atualizar()"> Actinomyces sp</label>
+                <label><input type="checkbox" class="micro" value="Candida sp" onchange="atualizar()"> Candida sp</label>
+                <label><input type="checkbox" class="micro" value="Trichomonas vaginalis" onchange="atualizar()"> Trichomonas vaginalis</label>
+                <label><input type="checkbox" class="micro" data-full="Bacilos supracitoplasmáticos (sugestivos de Gardnerella/Mobiluncus)" value="Gardnerella/Mobiluncus" onchange="atualizar()"> Gardnerella/Mobiluncus</label>
+                <label><input type="checkbox" class="micro" data-full="Efeito citopático compatível com vírus do grupo Herpes" value="Vírus Herpes" onchange="atualizar()"> Vírus Herpes</label>
+              </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="sec">
+              <div class="sec-title">4. Conclusão Técnica</div>
+
+              <div class="op-col">
+                <label><input type="radio" name="c" data-tit="CONCLUSÃO" data-full="NEGATIVO PARA MALIGNIDADE." value="NEGATIVO" onchange="atualizar()"> NEGATIVO PARA MALIGNIDADE.</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: possivelmente não neoplásicas (ASC-US)" value="ASC-US" onchange="atualizar()"> ESCAMOSAS (ASC-US)</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Escamosas: não se pode afastar lesão intra-epitelial de alto grau (ASC-H)" value="ASC-H" onchange="atualizar()"> ESCAMOSAS (ASC-H)</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: possivelmente não neoplásicas" value="GLANDULARES: Possivelmente não neoplásicas" onchange="atualizar()"> GLANDULARES: Possivelmente não neoplásicas</label>
+                <label><input type="radio" name="c" data-tit="CÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO" data-full="Glandulares: não se pode afastar lesão de alto grau" value="GLANDULARES: Não se pode afastar alto grau" onchange="atualizar()"> GLANDULARES: Não se pode afastar alto grau</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">ATIPIAS EM CÉLULAS ESCAMOSAS:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de baixo grau (compreendendo efeito citopático pelo vírus HPV e neoplasia intra-epitelial cervical grau I - NIC I)" value="NIC I" onchange="atualizar()"> BAIXO GRAU (HPV / NIC I)</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Lesão intra-epitelial de alto grau (NIC II e III)" value="NIC II / III" onchange="atualizar()"> ALTO GRAU (NIC II / III)</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS ESCAMOSAS" data-full="Carcinoma epidermóide invasor" value="Carcinoma" onchange="atualizar()"> Carcinoma epidermóide invasor</label>
+              </div>
+
+              <div class="linha" style="margin-top:10px;">
+                <div class="lbl">ATIPIAS EM CÉLULAS GLANDULARES:</div>
+              </div>
+              <div class="grupo">
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma 'in situ'" value="Adenocarcinoma 'in situ'" onchange="atualizar()"> Adenocarcinoma "in situ"</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, cervical" value="Adenocarcinoma cervical" onchange="atualizar()"> Adenocarcinoma invasor, cervical</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, endometrial" value="Adenocarcinoma endometrial" onchange="atualizar()"> Adenocarcinoma invasor, endometrial</label>
+                <label><input type="radio" name="c" data-tit="ATIPIAS EM CÉLULAS GLANDULARES" data-full="Adenocarcinoma invasor, SOE" value="Adenocarcinoma SOE" onchange="atualizar()"> Adenocarcinoma invasor, SOE</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="obs-wrap">
+            <div class="obs-title">Observação:</div>
+
+            <div class="op-col" style="margin-bottom:10px;">
+              <label><input type="radio" name="obs_opt" value="Tratar e repetir." onclick="aplicarObs(this.value)"> Tratar e repetir.</label>
+              <label><input type="radio" name="obs_opt" value="Alterações celulares importantes. Tratar e repetir." onclick="aplicarObs(this.value)"> Alterações celulares importantes. Tratar e repetir.</label>
+              <label><input type="radio" name="obs_opt" value="Correlacionar com exames complementares." onclick="aplicarObs(this.value)"> Correlacionar com exames complementares.</label>
+              <label><input type="radio" name="obs_opt" value="Padrão epitelial hipoestrogênico." onclick="aplicarObs(this.value)"> Padrão epitelial hipoestrogênico.</label>
+              <label><input type="radio" name="obs_opt" value="Padrão epitelial ainda trófico." onclick="aplicarObs(this.value)"> Padrão epitelial ainda trófico.</label>
+            </div>
+
+            <textarea id="obs_texto_tela" placeholder="Caso necessário, digite a observação aqui..."></textarea>
+          </div>
+
+          <div class="actions-bottom">
+            <button class="btn btn-print" onclick="imprimirLaudo()">IMPRIMIR / SALVAR PDF</button>
+          </div>
+
+        </div>
+
+        <!-- ========================= PRINT ========================= -->
+        <div class="print-only">
+          <div class="print-bg">
+            <!-- ✅ TIMBRE CORRIGIDO -->
+            <img src="img/sesctopo.png" alt="Timbre">
+          </div>
+
+          <div class="print-seal">
+            <img src="logo/logotipo.png" alt="Selo">
+          </div>
+
+          <div class="print-top-info">
+            <div class="row"><span>Emissão:</span><span id="printData"></span></div>
+            <div class="row"><span>Hora:</span><span id="printHora"></span></div>
+            <div class="row"><span>Página:</span><span id="printPagina">1</span></div>
+            <div class="row"><span>UF:</span><span>PB</span></div>
+          </div>
+
+          <div class="print-page">
+            <div class="cab-paciente">
+              <div class="cab-row1">
+                <div class="cab-left">
+                  <div class="cab-lbl2">PACIENTE</div>
+                  <div class="cab-nome" id="cab_nome"></div>
+                </div>
+                <div class="cab-right">
+                  <div class="cab-lbl2">Nº DO EXAME</div>
+                  <div class="cab-exame" id="cab_exame"></div>
+                </div>
+              </div>
+
+              <div class="cab-row2">
+                <div>DATA DE NASCIMENTO: <span id="cab_nasc"></span></div>
+                <div>CARTÃO SUS: <span id="cab_sus"></span></div>
+                <div>RUA: <span id="cab_rua"></span></div>
+                <div>TELEFONE: <span id="cab_tel"></span></div>
+                <div>BAIRRO: <span id="cab_bairro"></span></div>
+                <div></div>
+                <div>CIDADE: <span id="cab_cidade"></span></div>
+                <div></div>
+                <div>CEP: <span id="cab_cep"></span></div>
+                <div></div>
+              </div>
+            </div>
+
+            <div class="linha-identificacao"><strong>CONVÊNIO:</strong>&nbsp;UNIDADE MÓVEL SESC SAÚDE MULHER</div>
+            <div class="linha-identificacao"><strong>EXAME REALIZADO:</strong>&nbsp;CITOPATOLÓGICO CÉRVICO-VAGINAL/MICROFLORA</div>
+            <div class="linha-identificacao"><strong>DATA DA COLETA:</strong>&nbsp;<span id="data_coleta_print"></span></div>
+            <div class="linha-identificacao"><strong>RESPONSÁVEL:</strong>&nbsp;<span id="nome_resp_print"></span></div>
+
+            <div class="titulo-laudo">LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO</div>
+
+            <div class="secao-print">
+              <span class="tit-negrito">AVALIAÇÃO PRÉ-ANALÍTICA</span><br>
+              <span class="tit-normal-caps">ADEQUABILIDADE DO MATERIAL:</span> <span id="p_adeq"></span><br>
+              <span class="tit-normal-caps">EPITÉLIOS REPRESENTADOS NA AMOSTRA:</span> <span id="p_epi"></span><br>
+              <span class="tit-normal-caps">REPRESENTATIVIDADE DA ZONA DE TRANSFORMAÇÃO:</span> <span id="p_zona"></span>
+            </div>
+
+            <div class="secao-print">
+              <span id="p_tit_diag" class="tit-negrito">DIAGNÓSTICO DESCRITIVO:</span>
+              <div style="display:block;margin-top:6px;">
+                <span id="p_subtit_diag" class="tit-normal-caps" style="display:none;">ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:</span>
+                <span id="p_res_diag"></span>
+              </div>
+            </div>
+
+            <div class="secao-print" style="margin-top:-2px;">
+              <span class="tit-normal-caps">MICROBIOLOGIA:</span>
+              <span id="p_res_micro"></span>
+            </div>
+
+            <div class="secao-print">
+              <span id="p_tit_concl" class="tit-negrito">CONCLUSÃO:</span>
+              <span id="p_res_concl" class="concl-resposta-bloco"></span>
+            </div>
+
+            <div class="secao-print" id="obs_print_wrap">
+              <strong>Observação:</strong>
+              <span id="obs_print"></span>
+            </div>
+
+            <div class="rodape-prof">
+              <div id="rodape_data"></div>
+
+              <div class="assinatura-wrap">
+                <img src="assinatura/ass.png" alt="Assinatura" class="assinatura-img">
+              </div>
+
+              <div style="font-weight:800;">Dra. Daniele Carvalho Macêdo</div>
+              <div>CRM 12077 PB</div>
+
+              <div class="legal-box">
+                A AVALIAÇÃO DO RESULTADO DESTE(S) EXAME(S) E A CONCLUSÃO DIAGNÓSTICA DEVEM SER FEITOS PELO MÉDICO: DEPENDEM DE DADOS CLÍNICOS E OUTRO(S) EXAMES DO PACIENTE.
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ✅ RODAPÉ IMAGEM FIXO NO FINAL -->
+          <div class="print-footer">
+            <img src="img/rodape.png" alt="Rodapé">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function up(v){ return (v||"").toUpperCase().trim(); }
+  function sanitizeFileName(name){
+    return (name||"").replace(/[\\/:*?"<>|]/g, "").replace(/\s+/g, " ").trim();
+  }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+
+  function atualizarBlocoPrintTopo(){
+    const agora = new Date();
+    const data = pad2(agora.getDate()) + '/' + pad2(agora.getMonth()+1) + '/' + agora.getFullYear();
+    const hora = pad2(agora.getHours()) + ':' + pad2(agora.getMinutes()) + ':' + pad2(agora.getSeconds());
+    const elData = document.getElementById("printData");
+    const elHora = document.getElementById("printHora");
+    if(elData) elData.textContent = data;
+    if(elHora) elHora.textContent = hora;
+  }
+
+  function syncObservacao(){
+    const txt = (document.getElementById("obs_texto_tela")?.value || "").trim();
+    const wrap = document.getElementById("obs_print_wrap");
+    const el = document.getElementById("obs_print");
+
+    if(el) el.textContent = txt;
+
+    if(wrap){
+      if(txt) wrap.classList.remove("vazio");
+      else wrap.classList.add("vazio");
+    }
+  }
+
+  function aplicarObs(txt){
+    const obs = document.getElementById("obs_texto_tela");
+    if(!obs) return;
+    obs.value = txt;
+    syncObservacao();
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const init = {
+    paciente: up(params.get("paciente")),
+    exame: up(params.get("exame")),
+    data_coleta: up(params.get("data_coleta")),
+    data_nascimento: up(params.get("data_nascimento")),
+    cartao_sus: up(params.get("cartao_sus")),
+    telefone: up(params.get("telefone")),
+    rua: up(params.get("rua")),
+    bairro: up(params.get("bairro")),
+    cidade: up(params.get("cidade")),
+    cep: up(params.get("cep")),
+    responsavel: up(params.get("responsavel")),
+    observacao: (params.get("observacao") || "").trim()
+  };
+
+  function preencherCabecalhoPrint(){
+    const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val || ""; };
+
+    set("cab_nome", init.paciente);
+    set("cab_exame", init.exame);
+    set("cab_nasc", init.data_nascimento);
+    set("cab_sus", init.cartao_sus);
+    set("cab_tel", init.telefone);
+    set("cab_rua", init.rua);
+    set("cab_bairro", init.bairro);
+    set("cab_cidade", init.cidade);
+    set("cab_cep", init.cep);
+
+    set("data_coleta_print", init.data_coleta);
+    set("nome_resp_print", init.responsavel);
+
+    const now = new Date();
+    const dia = now.getDate();
+    const mes = now.toLocaleDateString("pt-BR",{month:"long"});
+    const ano = now.getFullYear();
+    set("rodape_data", `João Pessoa, ${dia} de ${mes} de ${ano}`);
+  }
+
+  function atualizar(){
+    const checksEpi = document.querySelectorAll('.epi:checked');
+
+    const zSim = document.getElementById("zona_sim");
+    const zNao = document.getElementById("zona_nao");
+
+    if(checksEpi.length >= 2){
+      if(zSim && !zSim.checked) zSim.checked = true;
+    }else if(checksEpi.length === 1){
+      if(zNao && !zNao.checked) zNao.checked = true;
+    }
+
+    const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val || ""; };
+
+    set('p_adeq', document.querySelector('input[name="adeq"]:checked')?.value || '');
+    set('p_epi', Array.from(checksEpi).map(c => c.value).join(", "));
+    set('p_zona', document.querySelector('input[name="zona"]:checked')?.value || '');
+
+    const norm = document.getElementById('chk_norm')?.checked;
+    const alts = Array.from(document.querySelectorAll('.alt:checked')).map(c => c.value);
+
+    const pTitDiag = document.getElementById('p_tit_diag');
+    const pSubtitDiag = document.getElementById('p_subtit_diag');
+    const pResDiag = document.getElementById('p_res_diag');
+
+    if(alts.length > 0){
+      if(pTitDiag) pTitDiag.style.display = "inline";
+      if(pSubtitDiag) pSubtitDiag.style.display = "inline";
+      if(pResDiag) pResDiag.textContent = " " + alts.join(", ") + ".";
+    }else if(norm){
+      if(pTitDiag) pTitDiag.style.display = "none";
+      if(pSubtitDiag) pSubtitDiag.style.display = "none";
+      if(pResDiag) pResDiag.textContent = "DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO.";
+    }else{
+      if(pTitDiag) pTitDiag.style.display = "inline";
+      if(pSubtitDiag) pSubtitDiag.style.display = "none";
+      if(pResDiag) pResDiag.textContent = "";
+    }
+
+    const micros = Array.from(document.querySelectorAll('.micro:checked'))
+      .map(c => c.getAttribute('data-full') || c.value);
+
+    set('p_res_micro', micros.join(", ") + (micros.length ? "." : ""));
+
+    const concl = document.querySelector('input[name="c"]:checked');
+    const elTitConcl = document.getElementById('p_tit_concl');
+    const elResConcl = document.getElementById('p_res_concl');
+
+    if(concl){
+      const categoria = concl.getAttribute('data-tit') || "CONCLUSÃO";
+      const respostaTecnica = concl.getAttribute('data-full') || concl.value || "";
+      if(elTitConcl) elTitConcl.textContent = (concl.value === "NEGATIVO") ? "CONCLUSÃO:" : (categoria + ":");
+      if(elResConcl) elResConcl.textContent = respostaTecnica;
+    }else{
+      if(elTitConcl) elTitConcl.textContent = "CONCLUSÃO:";
+      if(elResConcl) elResConcl.textContent = "";
+    }
+
+    preencherCabecalhoPrint();
+    syncObservacao();
+    atualizarBlocoPrintTopo();
+  }
+
+  function mesChaveAtual(){
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth()+1).padStart(2,"0");
+    return `${yyyy}-${mm}`;
+  }
+  function keyPositivosMes(){ return `positivos_${mesChaveAtual()}`; }
+
+  function salvarCasoPositivoNoStorage(payload){
+    const lista = JSON.parse(localStorage.getItem(keyPositivosMes()) || "[]");
+    lista.push({ ...payload, data: new Date().toISOString() });
+    localStorage.setItem(keyPositivosMes(), JSON.stringify(lista));
+  }
+
+  function gerarArquivoExportacaoMes(){
+    const mes = mesChaveAtual();
+    const lista = JSON.parse(localStorage.getItem(keyPositivosMes()) || "[]");
+    const keySistema = `pacientes_${mes}`;
+
+    const registros = lista.map(p => ({
+      nome: `${p.exame} ${p.nome}`.trim(),
+      telefone: p.telefone || "",
+      categoria: p.categoria || "",
+      subcategoria: p.subcategoria || ""
+    }));
+
+    const exportJSON = { [keySistema]: JSON.stringify(registros) };
+
+    const blob = new Blob([JSON.stringify(exportJSON)], { type:"application/json;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `EXPORT_${mes}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function nomeArquivoSugerido(){
+    const exameSeguro = (init.exame || "").trim().replaceAll("/", ".");
+    const nome = (init.paciente || "PACIENTE").trim().toUpperCase();
+    return sanitizeFileName(`${exameSeguro} ${nome}`);
+  }
+
+  function imprimirLaudo(){
+    atualizar();
+    syncObservacao();
+
+    const sugerido = nomeArquivoSugerido();
+    const digitado = prompt("Nome do arquivo (PDF):", sugerido);
+    if(digitado === null) return;
+
+    const nomeFinal = (digitado || sugerido).trim() || sugerido;
+    const tituloOriginal = document.title;
+    document.title = nomeFinal;
+
+    try{
+      const concl = document.querySelector('input[name="c"]:checked');
+      if(concl && concl.value !== "NEGATIVO"){
+        const payload = {
+          exame: init.exame,
+          nome: init.paciente,
+          telefone: init.telefone,
+          categoria: concl.getAttribute("data-tit") || "",
+          subcategoria: (concl.getAttribute("data-full") || concl.value || "").trim()
+        };
+        salvarCasoPositivoNoStorage(payload);
+        gerarArquivoExportacaoMes();
+      }
+    }catch(e){ console.error(e); }
+
+    const printContainer = document.querySelector(".print-only");
+    if(!printContainer){
+      alert("Erro: bloco de impressão não encontrado (.print-only).");
+      document.title = tituloOriginal;
+      return;
+    }
+
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.style.position = "fixed";
+    iframe.style.left = "-99999px";
+    iframe.style.top = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+    let allCSS = "";
+    for(const ss of document.styleSheets){
+      try{
+        const rules = ss.cssRules;
+        if(!rules) continue;
+        for(const r of rules) allCSS += r.cssText + "\n";
+      }catch(e){}
+    }
+
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html lang="pt-br">
+        <head>
+          <meta charset="UTF-8"/>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+          <title>${nomeFinal}</title>
+          <style>
+            ${allCSS}
+            html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+            .no-print{ display:none !important; }
+            .print-only{ display:block !important; }
+          </style>
+        </head>
+        <body>
+          ${printContainer.innerHTML}
+        </body>
+      </html>
+    `);
+    doc.close();
+
+    setTimeout(() => {
+      const win = iframe.contentWindow;
+      win.focus();
+      setTimeout(() => {
+        win.print();
+
+        setTimeout(() => {
+          document.title = tituloOriginal;
+          iframe.remove();
+
+          try{
+            if(window.parent && window.parent !== window){
+              window.parent.postMessage({ type:"LAUDO_IMPRESSO" }, "*");
+            }
+          }catch(e){}
+
+        }, 900);
+
+      }, 120);
+    }, 650);
+  }
+
+  preencherCabecalhoPrint();
+  atualizarBlocoPrintTopo();
+
+  (function initObs(){
+    const obs = document.getElementById("obs_texto_tela");
+    if(!obs) return;
+
+    if(init.observacao && !obs.value) obs.value = init.observacao;
+
+    obs.addEventListener("input", () => syncObservacao());
+    syncObservacao();
+  })();
+
+  window.addEventListener("beforeprint", () => {
+    try{
+      atualizar();
+      syncObservacao();
+    }catch(e){
+      console.error("Erro beforeprint:", e);
+    }
+  });
+
+  window.atualizar = atualizar;
+</script>
+
+</body>
+</html>
