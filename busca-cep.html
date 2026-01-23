@@ -18,7 +18,6 @@
       padding: 14px;
     }
 
-    /* ✅ Card glass igual SI */
     .form-container{
       width: 560px;
       max-width: 96vw;
@@ -33,8 +32,12 @@
 
       max-height: 86vh;
       overflow:auto;
+
       color:#fff;
+      -ms-overflow-style:none;
+      scrollbar-width:none;
     }
+    .form-container::-webkit-scrollbar{ width:0; height:0; display:none; }
 
     h2{
       text-align:center;
@@ -46,11 +49,7 @@
       font-size: 14px;
     }
 
-    .tabs{
-      display:flex;
-      gap:8px;
-      margin-bottom: 12px;
-    }
+    .tabs{ display:flex; gap:8px; margin-bottom: 12px; }
 
     .tab{
       flex:1;
@@ -58,10 +57,8 @@
       text-align:center;
       cursor:pointer;
       border-radius: 12px;
-
       background: rgba(0,0,0,.18);
       border: 1px solid rgba(255,255,255,.12);
-
       font-weight: 900;
       letter-spacing:.04em;
       text-transform: uppercase;
@@ -93,12 +90,7 @@
     }
     input::placeholder{ color: rgba(255,255,255,.55); }
 
-    .btns{
-      display:flex;
-      gap:8px;
-      margin-top:6px;
-      flex-wrap:wrap;
-    }
+    .btns{ display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; }
 
     button{
       flex:1;
@@ -106,12 +98,10 @@
       border:none;
       border-radius: 14px;
       cursor:pointer;
-
       font-weight: 900;
       letter-spacing:.04em;
       text-transform: uppercase;
       font-size: 12px;
-
       color:#041b2f;
       background: linear-gradient(90deg, #00e09c, #1376b8);
       box-shadow: 0 14px 24px rgba(0,0,0,.18);
@@ -190,17 +180,15 @@
 
   <script>
     const UF='PB';
+    const $ = (id)=>document.getElementById(id);
 
     function showTab(id){
-      document.querySelectorAll('.tab,.tab-content')
-        .forEach(e=>e.classList.remove('active'));
+      document.querySelectorAll('.tab,.tab-content').forEach(e=>e.classList.remove('active'));
       document.querySelector(`[onclick="showTab('${id}')"]`).classList.add('active');
       document.getElementById(id).classList.add('active');
     }
 
-    function formatCep(c){
-      return c.replace(/^(\d{5})(\d{3})$/,'$1-$2');
-    }
+    function formatCep(c){ return c.replace(/^(\d{5})(\d{3})$/,'$1-$2'); }
 
     function detectarTipoLogradouro(logradouro){
       const tipos = {
@@ -226,27 +214,49 @@
 
     function ajustarBairro(bairroApi, logradouro){
       if(bairroApi && bairroApi.trim()) return bairroApi;
-      if(/^(Sítio|Sitio|Assentamento|Engenho)/i.test(logradouro)){
-        return 'Zona Rural';
-      }
+      if(/^(Sítio|Sitio|Assentamento|Engenho)/i.test(logradouro)) return 'Zona Rural';
       return 'Centro';
     }
 
-    /* ✅ manda dados pro SI (pai) */
-    function enviarParaSI({rua,bairro,cidade,cep}){
+    function enviarParaSI({bairro,cidade,cep}){
       try{
         window.parent.postMessage({
           type: "CEP_SELECIONADO",
-          payload: {rua,bairro,cidade,cep}
+          payload: { bairro, cidade, cep }
         }, "*");
       }catch(e){}
     }
 
+    function copyFallback(text){
+      try{
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+
+    async function copiar(texto){
+      try{
+        await navigator.clipboard.writeText(texto);
+        return true;
+      }catch(e){
+        return copyFallback(texto);
+      }
+    }
+
     function buildEndereco({logradouroOriginal,bairro,cidade,cep}){
       const {tipo, nome} = detectarTipoLogradouro(logradouroOriginal);
-      const rua = `${tipo} ${nome}`.replace(/\s+/g,' ').trim();
 
-      const texto = `${tipo}: ${nome}\nBairro: ${bairro}\nCidade: ${cidade}\nCEP: ${cep}`;
+      const textoEndereco = `${tipo}: ${nome}\nBairro: ${bairro}\nCidade: ${cidade}\nCEP: ${cep}`;
 
       return `
       <div class="endereco">
@@ -254,22 +264,28 @@
         <div><span class="label-bold">Bairro:</span> ${bairro}</div>
         <div><span class="label-bold">Cidade:</span> ${cidade}</div>
         <div><span class="label-bold">CEP:</span> ${cep}</div>
+
         <div class="btns">
-          <button class="secondary"
-            onclick="copiarEndereco(\`${texto}\`, '${rua}', '${bairro}', '${cidade}', '${cep}')">
-            Copiar Endereço
-          </button>
-          <button onclick="copiarCep('${cep}', '${rua}', '${bairro}', '${cidade}')">
-            Copiar CEP
-          </button>
+          <button class="secondary" onclick="selecionarEndereco(\`${textoEndereco}\`, '${bairro}', '${cidade}', '${cep}')">Copiar Endereço</button>
+          <button onclick="selecionarCep('${cep}', '${bairro}', '${cidade}')">Copiar CEP</button>
         </div>
       </div>`;
     }
 
+    async function selecionarEndereco(texto, bairro, cidade, cep){
+      await copiar(texto);
+      enviarParaSI({bairro, cidade, cep});
+    }
+
+    async function selecionarCep(cep, bairro, cidade){
+      await copiar(cep);
+      enviarParaSI({bairro, cidade, cep});
+    }
+
     async function buscarCep(){
-      const c = cepInput.value.replace(/\D/g,'');
+      const c = $("cepInput").value.replace(/\D/g,'');
       if(c.length!==8){
-        cepResult.innerHTML='CEP inválido';
+        $("cepResult").innerHTML='CEP inválido';
         return;
       }
 
@@ -277,62 +293,50 @@
       const d = await r.json();
 
       if(d.erro || d.uf!==UF){
-        cepResult.innerHTML='CEP não encontrado';
+        $("cepResult").innerHTML='CEP não encontrado';
         return;
       }
 
-      cepResult.innerHTML = buildEndereco({
-        logradouroOriginal: d.logradouro,
-        bairro: ajustarBairro(d.bairro,d.logradouro),
+      $("cepResult").innerHTML = buildEndereco({
+        logradouroOriginal: d.logradouro || "",
+        bairro: ajustarBairro(d.bairro, d.logradouro || ""),
         cidade: `${d.localidade}/${d.uf}`,
         cep: formatCep(c)
       });
 
-      cepInput.focus();
-      cepInput.select();
+      $("cepInput").focus();
+      $("cepInput").select();
     }
 
     async function buscarLogradouro(){
-      const cidade = cidadeInput.value;
-      const log = logradouroInput.value;
+      const cidade = $("cidadeInput").value;
+      const log = $("logradouroInput").value;
 
       const r = await fetch(`https://viacep.com.br/ws/${UF}/${cidade}/${log}/json/`);
       const d = await r.json();
 
       if(!Array.isArray(d) || !d.length){
-        logradouroResult.innerHTML='Nenhum resultado';
+        $("logradouroResult").innerHTML='Nenhum resultado';
         return;
       }
 
-      logradouroResult.innerHTML = d.map(i=>{
+      $("logradouroResult").innerHTML = d.map(i=>{
         const bruto = i.logradouro || log;
-        const bairro = ajustarBairro(i.bairro,bruto);
+        const bairro = ajustarBairro(i.bairro, bruto);
         const cid = `${i.localidade}/${i.uf}`;
         const cep = i.cep || '58000-000';
         return buildEndereco({logradouroOriginal: bruto, bairro, cidade: cid, cep});
       }).join('<hr class="divider">');
 
-      logradouroInput.focus();
-      logradouroInput.select();
-    }
-
-    function copiarCep(cep, rua, bairro, cidade){
-      navigator.clipboard.writeText(cep).then(()=>{
-        enviarParaSI({rua,bairro,cidade,cep});
-      });
-    }
-
-    function copiarEndereco(texto, rua, bairro, cidade, cep){
-      navigator.clipboard.writeText(texto).then(()=>{
-        enviarParaSI({rua,bairro,cidade,cep});
-      });
+      $("logradouroInput").focus();
+      $("logradouroInput").select();
     }
 
     function limpar(){
-      cepInput.value='';
-      logradouroInput.value='';
-      cepResult.innerHTML='';
-      logradouroResult.innerHTML='';
+      $("cepInput").value='';
+      $("logradouroInput").value='';
+      $("cepResult").innerHTML='';
+      $("logradouroResult").innerHTML='';
     }
   </script>
 </body>
