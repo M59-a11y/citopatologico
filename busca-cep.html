@@ -1,256 +1,339 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<link rel="icon" href="img/favicon.ico" type="image/x-icon">
-<link rel="icon" href="img/favicon.png" type="image/png">
-<meta charset="UTF-8">
-<title>Busca por CEP - PB</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Busca por CEP - PB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(to bottom right,#2ecc71,#3498db);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.form-container{
-  background:rgba(255,255,255,.9);
-  width:520px;
-  max-width:92vw;
-  padding:22px;
-  border-radius:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
-  max-height:90vh;
-  overflow:auto;
-}
-h2{text-align:center;margin:0 0 16px;font-weight:800}
-.tabs{display:flex;gap:6px;margin-bottom:14px}
-.tab{
-  flex:1;
-  padding:10px;
-  text-align:center;
-  cursor:pointer;
-  border-radius:10px;
-  background:#ddd;
-  font-weight:600;
-}
-.tab.active{background:#bbb}
-.tab-content{display:none}
-.tab-content.active{display:block}
-input{
-  width:100%;
-  padding:10px;
-  margin-bottom:8px;
-  border-radius:10px;
-  border:1px solid #ccc;
-}
-.btns{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
-button{
-  flex:1;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  color:#fff;
-  cursor:pointer;
-  background:#3498db;
-  font-weight:600;
-}
-button.gray{background:#607d8b}
-button.secondary{background:#2ecc71}
-.result{
-  margin-top:12px;
-  padding:10px;
-  background:#f9f9f9;
-  border-radius:10px;
-  border:1px solid #ccc;
-}
-.endereco{margin-bottom:10px}
-.divider{margin:10px 0}
-.label-bold{font-weight:600;}
-</style>
+  <style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; height:100%; }
+
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      background: transparent !important;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding: 14px;
+    }
+
+    /* ✅ Card glass igual SI */
+    .form-container{
+      width: 560px;
+      max-width: 96vw;
+      padding: 18px;
+      border-radius: 18px;
+
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.20);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 18px 55px rgba(0,0,0,.28);
+
+      max-height: 86vh;
+      overflow:auto;
+      color:#fff;
+    }
+
+    h2{
+      text-align:center;
+      margin: 0 0 14px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-shadow: 0 10px 22px rgba(0,0,0,.22);
+      font-size: 14px;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom: 12px;
+    }
+
+    .tab{
+      flex:1;
+      padding:10px;
+      text-align:center;
+      cursor:pointer;
+      border-radius: 12px;
+
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.12);
+
+      font-weight: 900;
+      letter-spacing:.04em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,.88);
+      user-select:none;
+    }
+
+    .tab.active{
+      background: rgba(0,224,156,.18);
+      border: 1px solid rgba(0,224,156,.50);
+      color:#fff;
+    }
+
+    .tab-content{ display:none; }
+    .tab-content.active{ display:block; }
+
+    input{
+      width:100%;
+      padding:12px;
+      margin-bottom:8px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.16);
+      color:#fff;
+      outline:none;
+      box-shadow: 0 10px 18px rgba(0,0,0,.14);
+      font-weight: 800;
+    }
+    input::placeholder{ color: rgba(255,255,255,.55); }
+
+    .btns{
+      display:flex;
+      gap:8px;
+      margin-top:6px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      flex:1;
+      padding:10px 12px;
+      border:none;
+      border-radius: 14px;
+      cursor:pointer;
+
+      font-weight: 900;
+      letter-spacing:.04em;
+      text-transform: uppercase;
+      font-size: 12px;
+
+      color:#041b2f;
+      background: linear-gradient(90deg, #00e09c, #1376b8);
+      box-shadow: 0 14px 24px rgba(0,0,0,.18);
+    }
+    button:active{ transform: translateY(1px); }
+
+    button.gray{
+      background: rgba(0,0,0,.22);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 10px 18px rgba(0,0,0,.12);
+    }
+
+    button.secondary{
+      background: linear-gradient(90deg, #00e09c, #00d1ff);
+      color:#041b2f;
+    }
+
+    .result{
+      margin-top:12px;
+      padding:12px;
+      background: rgba(0,0,0,.16);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 18px rgba(0,0,0,.12);
+      color:#fff;
+      font-weight: 800;
+    }
+
+    .endereco{
+      margin-bottom:10px;
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .divider{
+      margin:12px 0;
+      border: 0;
+      border-top: 1px dashed rgba(255,255,255,.25);
+    }
+
+    .label-bold{ font-weight: 900; letter-spacing:.02em; }
+  </style>
 </head>
 
 <body>
-<div class="form-container">
-<h2>BUSCA POR CEP - PB</h2>
+  <div class="form-container">
+    <h2>BUSCA POR CEP - PB</h2>
 
-<div class="tabs">
-  <div class="tab active" onclick="showTab('cep')">Busca por CEP</div>
-  <div class="tab" onclick="showTab('logradouro')">Busca por Logradouro</div>
-</div>
-
-<div id="cep" class="tab-content active">
-  <input id="cepInput" placeholder="Digite o CEP" onfocus="this.select()">
-  <div class="btns">
-    <button onclick="buscarCep()">Buscar</button>
-    <button class="gray" onclick="limpar()">Limpar</button>
-  </div>
-  <div id="cepResult" class="result"></div>
-</div>
-
-<div id="logradouro" class="tab-content">
-  <input id="cidadeInput" value="João Pessoa" placeholder="Cidade" onfocus="this.select()">
-  <input id="logradouroInput" placeholder="Logradouro" onfocus="this.select()">
-  <div class="btns">
-    <button onclick="buscarLogradouro()">Buscar</button>
-    <button class="gray" onclick="limpar()">Limpar</button>
-  </div>
-  <div id="logradouroResult" class="result"></div>
-</div>
-</div>
-
-<script>
-const UF='PB';
-
-function showTab(id){
-  document.querySelectorAll('.tab,.tab-content')
-    .forEach(e=>e.classList.remove('active'));
-  document.querySelector(`[onclick="showTab('${id}')"]`).classList.add('active');
-  document.getElementById(id).classList.add('active');
-}
-
-function formatCep(c){
-  return c.replace(/^(\d{5})(\d{3})$/,'$1-$2');
-}
-
-function detectarTipoLogradouro(logradouro){
-  const tipos = {
-    'Avenida': /^(Avenida|Avenida |Av\.?|Av |Avenida,|Av\.,)/i,
-    'Travessa': /^(Travessa|Travessa |Trav\.?|Trav |Travessa,|Trav\.,)/i,
-    'Comunidade': /^(Comunidade|Comunidade )/i,
-    'Rua': /^(Rua|Rua |R\.?|R |Rua,|R\.,)/i
-  };
-
-  for(const [tipo, regex] of Object.entries(tipos)){
-    if(regex.test(logradouro)){
-      return {tipo, nome: logradouro.replace(regex, '').trim()};
-    }
-  }
-
-  const matchEspecial = logradouro.match(/^(Sítio|Sitio|Assentamento|Engenho)\s+(.*)/i);
-  if(matchEspecial){
-    return {tipo: matchEspecial[1], nome: matchEspecial[2].trim()};
-  }
-
-  return {tipo: 'Rua', nome: logradouro.trim()};
-}
-
-function ajustarBairro(bairroApi, logradouro){
-  if(bairroApi && bairroApi.trim()) return bairroApi;
-  if(/^(Sítio|Sitio|Assentamento|Engenho)/i.test(logradouro)){
-    return 'Zona Rural';
-  }
-  return 'Centro';
-}
-
-/* ✅ envia os dados pro SI (pai) */
-function enviarParaSI({rua,bairro,cidade,cep}){
-  try{
-    window.parent.postMessage({
-      type: "CEP_SELECIONADO",
-      payload: {rua,bairro,cidade,cep}
-    }, "*");
-  }catch(e){}
-}
-
-function buildEndereco({logradouroOriginal,bairro,cidade,cep}){
-  const {tipo, nome} = detectarTipoLogradouro(logradouroOriginal);
-  const rua = `${tipo} ${nome}`.replace(/\s+/g,' ').trim();
-
-  const texto = `${tipo}: ${nome}\nBairro: ${bairro}\nCidade: ${cidade}\nCEP: ${cep}`;
-
-  return `
-  <div class="endereco">
-    <div><span class="label-bold">${tipo}:</span> ${nome}</div>
-    <div><span class="label-bold">Bairro:</span> ${bairro}</div>
-    <div><span class="label-bold">Cidade:</span> ${cidade}</div>
-    <div><span class="label-bold">CEP:</span> ${cep}</div>
-    <div class="btns">
-      <button class="secondary" onclick="copiarEndereco(\`${texto}\`, '${rua}', '${bairro}', '${cidade}', '${cep}')">Copiar Endereço</button>
-      <button onclick="copiarCep('${cep}', '${rua}', '${bairro}', '${cidade}')">Copiar CEP</button>
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('cep')">Busca por CEP</div>
+      <div class="tab" onclick="showTab('logradouro')">Busca por Logradouro</div>
     </div>
-  </div>`;
-}
 
-async function buscarCep(){
-  const c = cepInput.value.replace(/\D/g,'');
-  if(c.length!==8){
-    cepResult.innerHTML='CEP inválido';
-    return;
-  }
+    <div id="cep" class="tab-content active">
+      <input id="cepInput" placeholder="Digite o CEP" onfocus="this.select()">
+      <div class="btns">
+        <button onclick="buscarCep()">Buscar</button>
+        <button class="gray" onclick="limpar()">Limpar</button>
+      </div>
+      <div id="cepResult" class="result"></div>
+    </div>
 
-  const r = await fetch(`https://viacep.com.br/ws/${c}/json/`);
-  const d = await r.json();
+    <div id="logradouro" class="tab-content">
+      <input id="cidadeInput" value="João Pessoa" placeholder="Cidade" onfocus="this.select()">
+      <input id="logradouroInput" placeholder="Logradouro" onfocus="this.select()">
+      <div class="btns">
+        <button onclick="buscarLogradouro()">Buscar</button>
+        <button class="gray" onclick="limpar()">Limpar</button>
+      </div>
+      <div id="logradouroResult" class="result"></div>
+    </div>
+  </div>
 
-  if(d.erro || d.uf!==UF){
-    cepResult.innerHTML='CEP não encontrado';
-    return;
-  }
+  <script>
+    const UF='PB';
 
-  cepResult.innerHTML = buildEndereco({
-    logradouroOriginal: d.logradouro,
-    bairro: ajustarBairro(d.bairro,d.logradouro),
-    cidade: `${d.localidade}/${d.uf}`,
-    cep: formatCep(c)
-  });
+    function showTab(id){
+      document.querySelectorAll('.tab,.tab-content')
+        .forEach(e=>e.classList.remove('active'));
+      document.querySelector(`[onclick="showTab('${id}')"]`).classList.add('active');
+      document.getElementById(id).classList.add('active');
+    }
 
-  cepInput.focus();
-  cepInput.select();
-}
+    function formatCep(c){
+      return c.replace(/^(\d{5})(\d{3})$/,'$1-$2');
+    }
 
-async function buscarLogradouro(){
-  const cidade = cidadeInput.value;
-  const log = logradouroInput.value;
+    function detectarTipoLogradouro(logradouro){
+      const tipos = {
+        'Avenida': /^(Avenida|Avenida |Av\.?|Av |Avenida,|Av\.,)/i,
+        'Travessa': /^(Travessa|Travessa |Trav\.?|Trav |Travessa,|Trav\.,)/i,
+        'Comunidade': /^(Comunidade|Comunidade )/i,
+        'Rua': /^(Rua|Rua |R\.?|R |Rua,|R\.,)/i
+      };
 
-  const r = await fetch(`https://viacep.com.br/ws/${UF}/${cidade}/${log}/json/`);
-  const d = await r.json();
+      for(const [tipo, regex] of Object.entries(tipos)){
+        if(regex.test(logradouro)){
+          return {tipo, nome: logradouro.replace(regex, '').trim()};
+        }
+      }
 
-  if(!Array.isArray(d) || !d.length){
-    logradouroResult.innerHTML='Nenhum resultado';
-    return;
-  }
+      const matchEspecial = logradouro.match(/^(Sítio|Sitio|Assentamento|Engenho)\s+(.*)/i);
+      if(matchEspecial){
+        return {tipo: matchEspecial[1], nome: matchEspecial[2].trim()};
+      }
 
-  logradouroResult.innerHTML = d.map(i=>{
-    const bruto = i.logradouro || log;
-    const bairro = ajustarBairro(i.bairro,bruto);
-    const cid = `${i.localidade}/${i.uf}`;
-    const cep = i.cep || '58000-000';
-    return buildEndereco({logradouroOriginal: bruto, bairro, cidade: cid, cep});
-  }).join('<hr class="divider">');
+      return {tipo: 'Rua', nome: logradouro.trim()};
+    }
 
-  logradouroInput.focus();
-  logradouroInput.select();
-}
+    function ajustarBairro(bairroApi, logradouro){
+      if(bairroApi && bairroApi.trim()) return bairroApi;
+      if(/^(Sítio|Sitio|Assentamento|Engenho)/i.test(logradouro)){
+        return 'Zona Rural';
+      }
+      return 'Centro';
+    }
 
-/* ✅ copiar e enviar */
-function copiarCep(cep, rua, bairro, cidade){
-  navigator.clipboard.writeText(cep).then(()=>{
-    enviarParaSI({rua,bairro,cidade,cep});
-  });
-}
+    /* ✅ manda dados pro SI (pai) */
+    function enviarParaSI({rua,bairro,cidade,cep}){
+      try{
+        window.parent.postMessage({
+          type: "CEP_SELECIONADO",
+          payload: {rua,bairro,cidade,cep}
+        }, "*");
+      }catch(e){}
+    }
 
-function copiarEndereco(texto, rua, bairro, cidade, cep){
-  navigator.clipboard.writeText(texto).then(()=>{
-    enviarParaSI({rua,bairro,cidade,cep});
-  });
-}
+    function buildEndereco({logradouroOriginal,bairro,cidade,cep}){
+      const {tipo, nome} = detectarTipoLogradouro(logradouroOriginal);
+      const rua = `${tipo} ${nome}`.replace(/\s+/g,' ').trim();
 
-function limpar(){
-  cepInput.value='';
-  logradouroInput.value='';
-  cepResult.innerHTML='';
-  logradouroResult.innerHTML='';
-  document.querySelector('.form-container')
-    .scrollIntoView({behavior:'smooth'});
+      const texto = `${tipo}: ${nome}\nBairro: ${bairro}\nCidade: ${cidade}\nCEP: ${cep}`;
 
-  const campo=document.querySelector('.tab-content.active input:last-of-type');
-  campo.focus();
-  campo.select();
-}
-</script>
+      return `
+      <div class="endereco">
+        <div><span class="label-bold">${tipo}:</span> ${nome}</div>
+        <div><span class="label-bold">Bairro:</span> ${bairro}</div>
+        <div><span class="label-bold">Cidade:</span> ${cidade}</div>
+        <div><span class="label-bold">CEP:</span> ${cep}</div>
+        <div class="btns">
+          <button class="secondary"
+            onclick="copiarEndereco(\`${texto}\`, '${rua}', '${bairro}', '${cidade}', '${cep}')">
+            Copiar Endereço
+          </button>
+          <button onclick="copiarCep('${cep}', '${rua}', '${bairro}', '${cidade}')">
+            Copiar CEP
+          </button>
+        </div>
+      </div>`;
+    }
+
+    async function buscarCep(){
+      const c = cepInput.value.replace(/\D/g,'');
+      if(c.length!==8){
+        cepResult.innerHTML='CEP inválido';
+        return;
+      }
+
+      const r = await fetch(`https://viacep.com.br/ws/${c}/json/`);
+      const d = await r.json();
+
+      if(d.erro || d.uf!==UF){
+        cepResult.innerHTML='CEP não encontrado';
+        return;
+      }
+
+      cepResult.innerHTML = buildEndereco({
+        logradouroOriginal: d.logradouro,
+        bairro: ajustarBairro(d.bairro,d.logradouro),
+        cidade: `${d.localidade}/${d.uf}`,
+        cep: formatCep(c)
+      });
+
+      cepInput.focus();
+      cepInput.select();
+    }
+
+    async function buscarLogradouro(){
+      const cidade = cidadeInput.value;
+      const log = logradouroInput.value;
+
+      const r = await fetch(`https://viacep.com.br/ws/${UF}/${cidade}/${log}/json/`);
+      const d = await r.json();
+
+      if(!Array.isArray(d) || !d.length){
+        logradouroResult.innerHTML='Nenhum resultado';
+        return;
+      }
+
+      logradouroResult.innerHTML = d.map(i=>{
+        const bruto = i.logradouro || log;
+        const bairro = ajustarBairro(i.bairro,bruto);
+        const cid = `${i.localidade}/${i.uf}`;
+        const cep = i.cep || '58000-000';
+        return buildEndereco({logradouroOriginal: bruto, bairro, cidade: cid, cep});
+      }).join('<hr class="divider">');
+
+      logradouroInput.focus();
+      logradouroInput.select();
+    }
+
+    function copiarCep(cep, rua, bairro, cidade){
+      navigator.clipboard.writeText(cep).then(()=>{
+        enviarParaSI({rua,bairro,cidade,cep});
+      });
+    }
+
+    function copiarEndereco(texto, rua, bairro, cidade, cep){
+      navigator.clipboard.writeText(texto).then(()=>{
+        enviarParaSI({rua,bairro,cidade,cep});
+      });
+    }
+
+    function limpar(){
+      cepInput.value='';
+      logradouroInput.value='';
+      cepResult.innerHTML='';
+      logradouroResult.innerHTML='';
+    }
+  </script>
 </body>
 </html>
