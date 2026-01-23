@@ -314,14 +314,13 @@
       font-weight:900;
     }
 
-    /* ✅ painel sem branco feio */
+    /* ✅ painel direito sem branco feio */
     .frameWrap{
       flex:1 1 auto;
       min-height:0;
       position:relative;
       overflow:hidden;
       padding: 10px;
-
       border-radius: 24px;
       background: rgba(255,255,255,.08);
       border: 1px solid rgba(255,255,255,.14);
@@ -482,7 +481,7 @@
 
             <div class="legend">
               Preencha campo por campo e use <b>TAB</b> para avançar.
-              <small>Ao entrar em <b>RUA</b> abre a busca CEP dentro do sistema. Ao escolher CEP/endereço, ele preenche sozinho.</small>
+              <small>Ao entrar em <b>RUA</b> abre a busca CEP dentro do sistema. Ao escolher CEP/endereço, ele preenche Bairro/Cidade/CEP (Rua fica manual para inserir número).</small>
             </div>
 
             <div class="form" id="formRapido">
@@ -530,8 +529,8 @@
               </div>
 
               <div class="campo">
-                <label for="rua">Rua</label>
-                <input id="rua" type="text" placeholder="Rua / Av. / Travessa" autocomplete="off">
+                <label for="rua">Rua (digite número/casa)</label>
+                <input id="rua" type="text" placeholder="Rua / Av. / Travessa + nº" autocomplete="off">
               </div>
 
               <div class="row2">
@@ -695,7 +694,6 @@
           const a = m[1].padStart(5,"0").slice(-6);
           const b = m[2].padStart(4,"0").slice(-4);
           el.value = `${a}/${b}`;
-          if(b.length === 4) focarProximo(el);
           return;
         }
         let d = soDigitos(v).slice(0,10);
@@ -739,7 +737,6 @@
 
     function abrirLaudoNoPainel(dados){
       esconderLaudo();
-
       localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({ ...dados, ts: Date.now() }));
       const params = new URLSearchParams();
       Object.entries(dados).forEach(([k,v])=>{ if(v) params.set(k, v); });
@@ -752,12 +749,16 @@
 
       if(ev.data.type === "CEP_SELECIONADO"){
         const d = ev.data.payload || {};
-        if(d.rua) $("rua").value = d.rua;
+        /* ✅ RUA NÃO PREENCHE! */
         if(d.bairro) $("bairro").value = d.bairro;
         if(d.cidade) $("cidade").value = d.cidade;
         if(d.cep) $("cep").value = d.cep;
+
         fecharModalCep();
-        $("observacao").focus();
+
+        /* ✅ volta pro campo RUA (para digitar nº da casa) */
+        $("rua").focus();
+        $("rua").select();
       }
 
       if(ev.data.type === "LAUDO_IMPRESSO"){
@@ -785,7 +786,6 @@
       abrirLaudoNoPainel(dados);
     });
 
-    // máscaras
     aplicarMascaraExame($("exame"));
     aplicarMascaraData($("data_coleta"));
     aplicarMascaraData($("data_nascimento"));
