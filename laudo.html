@@ -6,421 +6,510 @@
   <title>LAUDO — SI</title>
 
   <style>
-    /* =========================================================
-       ✅ LAUDO - PADRÃO IMPRESSÃO A4
-       - preenchimento automático por URL/localStorage
-       - glass/transparência na tela
-       - impressão perfeita em branco
-    ========================================================= */
-
     :root{
-      --txt:#111827;
-      --muted:#374151;
-      --border:#cbd5e1;
+      --txt:#0f172a;
+      --muted:#334155;
+      --border:rgba(255,255,255,.18);
+      --glass1: rgba(255,255,255,.12);
+      --glass2: rgba(255,255,255,.06);
+      --shadow: 0 18px 55px rgba(0,0,0,.22);
+      --blue:#2563eb;
     }
 
     *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; }
+    html,body{ margin:0; padding:0; height:100%; }
 
+    /* ✅ VISUAL (tela dentro do iframe) */
     body{
       font-family: Arial, sans-serif;
-      color: var(--txt);
-      background: transparent !important; /* ✅ sem branco por trás */
+      background: transparent;
+      color:#fff;
+      overflow-x:hidden;
+      overflow-y:auto;
+
+      -ms-overflow-style:none;
+      scrollbar-width:none;
+    }
+    body::-webkit-scrollbar{ width:0; height:0; display:none; }
+
+    /* ✅ área do formulário na tela */
+    .screenWrap{
+      padding: 14px;
     }
 
-    /* Barra de ações (não imprime) */
-    .toolbar{
-      position: sticky;
-      top:0;
-      z-index:10;
-      background: rgba(255,255,255,.92);
-      border-bottom:1px solid rgba(0,0,0,.08);
-      padding: 10px 12px;
+    .screenCard{
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--glass1), var(--glass2));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 14px;
+    }
+
+    .topBar{
       display:flex;
-      justify-content:space-between;
-      gap: 10px;
       align-items:center;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .toolbar strong{
-      font-size: 12px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: #0f172a;
-      font-weight: 900;
-    }
-
-    .btn{
-      border:none;
-      background:#0ea5e9;
-      color:#fff;
-      font-weight:900;
-      padding: 10px 14px;
-      border-radius: 10px;
-      cursor:pointer;
-      font-size: 12px;
-      letter-spacing:.06em;
-      text-transform: uppercase;
-      box-shadow: 0 10px 18px rgba(0,0,0,.12);
-    }
-    .btn:active{ transform: translateY(1px); }
-
-    /* Página A4 */
-    .page{
-      width: 210mm;
-      min-height: 297mm;
-      padding: 14mm 14mm 18mm 14mm;
-      margin: 0 auto;
-      position: relative;
-
-      /* ✅ glass na tela */
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 18px;
-    }
-
-    /* Cabeçalho do laudo */
-    .header{
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display:flex;
       justify-content:space-between;
-      gap: 10px;
-      align-items:flex-start;
-
-      background: rgba(255,255,255,.08);
-    }
-
-    .headerLeft .title{
-      font-weight: 900;
-      font-size: 14px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin:0 0 6px 0;
-      color: #fff;
-    }
-
-    .headerLeft .sub{
-      margin:0;
-      font-size: 12px;
-      color: rgba(255,255,255,.85);
-      font-weight: 800;
-    }
-
-    .headerRight{
-      text-align:right;
-      min-width: 190px;
-      font-size: 12px;
-    }
-
-    .headerRight .lbl{
-      color: rgba(255,255,255,.82);
-      font-weight: 800;
-      display:block;
-      margin-bottom:2px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .headerRight .v{
-      font-weight:900;
-      color:#fff;
-    }
-
-    /* Dados paciente */
-    .block{
-      margin-top: 10px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 12px;
+      gap: 12px;
       padding: 10px 12px;
-      background: rgba(255,255,255,.06);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      margin-bottom: 12px;
     }
 
-    .blockTitle{
-      margin:0 0 8px 0;
+    .topBar strong{
       font-size: 12px;
       font-weight: 900;
       letter-spacing:.14em;
       text-transform: uppercase;
-      color: #fff;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 10px;
-    }
-
-    .line{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 4px 0;
-      border-bottom: 1px dashed rgba(255,255,255,.18);
-    }
-    .line:last-child{ border-bottom:none; }
-
-    .item{
-      display:flex;
-      gap:6px;
-      align-items:baseline;
-      min-width: 220px;
-    }
-
-    .k{
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing:.08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.82);
+      color:#fff;
       white-space:nowrap;
     }
 
-    .v{
+    .btn{
+      border:none;
+      cursor:pointer;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-weight: 900;
+      letter-spacing:.06em;
+      text-transform: uppercase;
       font-size: 12px;
-      font-weight: 800;
-      color: #ffffff;
-      word-break: break-word;
+      color:#041b2f;
+      background: linear-gradient(90deg, #00e09c, #1376b8);
+      box-shadow: 0 14px 24px rgba(0,0,0,.18);
     }
+    .btn:active{ transform: translateY(1px); }
 
-    /* Corpo do laudo */
-    .content{
-      margin-top: 10px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 12px;
+    /* ✅ formulário */
+    .section{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.12);
       padding: 12px;
-      min-height: 155mm;
-      background: rgba(255,255,255,.06);
+      margin-top: 12px;
     }
 
-    .contentTitle{
+    .section h3{
       margin:0 0 10px 0;
       font-size: 12px;
       font-weight: 900;
       letter-spacing:.14em;
       text-transform: uppercase;
-      color: #ffffff;
+      color:#fff;
     }
 
-    .text{
-      font-size: 12px;
-      line-height: 1.45;
-      color: #ffffff;
-      white-space: pre-wrap;
-      min-height: 120mm;
-      font-weight: 700;
-    }
-
-    /* Assinatura */
-    .assinatura{
-      margin-top: 10px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 12px;
-      padding: 12px;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap: 10px;
-      background: rgba(255,255,255,.06);
-    }
-
-    .assinatura .resp{
+    .subTitle{
       font-size: 12px;
       font-weight: 900;
+      margin: 10px 0 6px 0;
       text-transform: uppercase;
-      letter-spacing:.08em;
-      color: #ffffff;
-    }
-
-    .assinatura .resp small{
-      display:block;
-      margin-top: 4px;
-      font-size: 11px;
-      font-weight: 800;
-      color: rgba(255,255,255,.85);
-      text-transform:none;
-      letter-spacing:0;
-    }
-
-    /* Rodapé fixo */
-    .footer{
-      position: absolute;
-      left: 14mm;
-      right: 14mm;
-      bottom: 10mm;
-      border-top: 1px solid rgba(255,255,255,.18);
-      padding-top: 6px;
-      font-size: 10px;
-      color: rgba(255,255,255,.75);
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      font-weight: 800;
       letter-spacing:.06em;
+      color: rgba(255,255,255,.92);
     }
 
-    /* Impressão */
-    @media print{
-      .toolbar{ display:none !important; }
+    .optRow{
+      display:flex;
+      gap: 16px;
+      flex-wrap:wrap;
+      padding: 6px 0;
+    }
 
-      body{ background:#fff !important; }
+    label.opt{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,.92);
+      user-select:none;
+    }
+
+    input[type="radio"], input[type="checkbox"]{
+      accent-color: var(--blue);
+      transform: translateY(1px);
+    }
+
+    textarea{
+      width:100%;
+      min-height: 120px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.14);
+      color:#fff;
+      padding: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      resize: vertical;
+      outline:none;
+    }
+
+    /* ============================================================
+       ✅ IMPRESSÃO: A4 + CABEÇALHO SOMENTE NA IMPRESSÃO
+    ============================================================ */
+    .printWrap{ display:none; }
+
+    @media print{
+      body{
+        background:#fff !important;
+        color:#111827 !important;
+        overflow: visible !important;
+      }
+
+      .screenWrap{ display:none !important; }
+      .printWrap{ display:block !important; }
 
       .page{
+        width: 210mm;
+        min-height: 297mm;
+        padding: 12mm 12mm 16mm 12mm;
+        margin: 0 auto;
+      }
+
+      .pHeader{
+        border:1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 10px 12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:10px;
+      }
+
+      .pHeader .title{
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing:.10em;
+        text-transform: uppercase;
+        margin:0 0 6px 0;
+        color:#0f172a;
+      }
+
+      .pHeader .sub{
         margin:0;
-        width:auto;
-        min-height:auto;
-
-        /* ✅ impressão em branco */
-        background:#fff !important;
-        border:none !important;
-        backdrop-filter:none !important;
-        -webkit-backdrop-filter:none !important;
-        border-radius: 0 !important;
+        font-size: 11px;
+        color:#374151;
+        font-weight: 800;
       }
 
-      .header,.block,.content,.assinatura{
-        background:#fff !important;
-        border:1px solid var(--border) !important;
+      .pHeader .examBox{
+        text-align:right;
+        min-width: 190px;
+        font-size: 12px;
+        color:#0f172a;
+      }
+      .pHeader .lbl{
+        font-size: 10px;
+        color:#374151;
+        font-weight: 900;
+        letter-spacing:.12em;
+        text-transform: uppercase;
+      }
+      .pHeader .val{
+        font-weight: 900;
+        font-size: 12px;
       }
 
-      .headerLeft .title,
-      .headerLeft .sub,
-      .headerRight .lbl,
-      .headerRight .v,
-      .blockTitle,
-      .contentTitle,
-      .k,.v,
-      .text,
-      .assinatura .resp,
-      .assinatura .resp small,
-      .footer{
-        color:#111 !important;
+      .pBlock{
+        margin-top: 10px;
+        border:1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 10px 12px;
+      }
+      .pBlockTitle{
+        margin:0 0 8px 0;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing:.14em;
+        text-transform: uppercase;
+        color:#0f172a;
       }
 
-      .line{ border-bottom: 1px dashed rgba(0,0,0,.25) !important; }
-      .footer{ border-top: 1px solid rgba(0,0,0,.25) !important; }
+      .pGrid{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+      }
+
+      .pLine{
+        display:flex;
+        gap: 12px;
+        flex-wrap:wrap;
+        padding: 4px 0;
+        border-bottom: 1px dashed rgba(148,163,184,.55);
+      }
+      .pLine:last-child{ border-bottom:none; }
+
+      .pItem{
+        display:flex;
+        gap:6px;
+        align-items:baseline;
+        min-width: 240px;
+      }
+      .pk{
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing:.08em;
+        text-transform: uppercase;
+        color:#374151;
+        white-space:nowrap;
+      }
+      .pv{
+        font-size: 11px;
+        font-weight: 700;
+        color:#111827;
+        overflow-wrap:anywhere;
+      }
+
+      /* ✅ end + sus/tel alinhado e endereço 1 linha */
+      .pEndRow{
+        display:flex;
+        gap:12px;
+        flex-wrap: nowrap;
+        align-items:flex-start;
+        padding: 4px 0;
+        border-bottom: 1px dashed rgba(148,163,184,.55);
+      }
+      .pEndLeft{
+        flex:1 1 auto;
+        min-width:0;
+        display:flex;
+        gap:6px;
+        align-items:baseline;
+        overflow:hidden;
+      }
+      .pEndLeft .pv{
+        white-space: nowrap;
+        overflow:hidden;
+        text-overflow: ellipsis;
+      }
+      .pEndRight{
+        flex:0 0 260px;
+        min-width:260px;
+        display:flex;
+        flex-direction:column;
+        gap:6px;
+      }
+
+      .pContent{
+        margin-top: 10px;
+        border:1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 12px;
+      }
+
+      .pContentTitle{
+        margin:0 0 10px 0;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing:.14em;
+        text-transform: uppercase;
+        color:#0f172a;
+      }
+
+      .pText{
+        font-family: "Arial Narrow", Arial, sans-serif;
+        font-size: 10pt;
+        color:#000;
+        line-height: 1.35;
+        white-space: pre-wrap;
+      }
+
+      .pFooter{
+        margin-top: 10px;
+        border-top: 1px solid #cbd5e1;
+        padding-top: 6px;
+        font-size: 10px;
+        color:#374151;
+        display:flex;
+        justify-content:space-between;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="toolbar">
-    <strong>LAUDO — EMISSÃO</strong>
-    <button class="btn" id="btnImprimir" type="button">IMPRIMIR</button>
+  <!-- ✅ TELA: Formulário completo para digitação -->
+  <div class="screenWrap">
+    <div class="screenCard">
+
+      <div class="topBar">
+        <strong>LAUDO — DIGITAÇÃO</strong>
+        <button class="btn" id="btnImprimir" type="button">IMPRIMIR</button>
+      </div>
+
+      <!-- 1 -->
+      <div class="section">
+        <h3>1. Avaliação pré-analítica</h3>
+        <div class="subTitle">Adequabilidade</div>
+        <div class="optRow">
+          <label class="opt"><input type="radio" name="adequabilidade" value="Satisfatória"> Satisfatória</label>
+          <label class="opt"><input type="radio" name="adequabilidade" value="Insatisfatória"> Insatisfatória</label>
+        </div>
+
+        <div class="subTitle">Epitélios</div>
+        <div class="optRow">
+          <label class="opt"><input type="checkbox" id="epi_escamoso"> Escamoso</label>
+          <label class="opt"><input type="checkbox" id="epi_glandular"> Glandular</label>
+          <label class="opt"><input type="checkbox" id="epi_metaplasico"> Metaplásico</label>
+        </div>
+
+        <div class="subTitle">Zona de transformação</div>
+        <div class="optRow">
+          <label class="opt"><input type="radio" name="zona" value="Sim"> Sim</label>
+          <label class="opt"><input type="radio" name="zona" value="Não"> Não</label>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="section">
+        <h3>2. Diagnóstico descritivo</h3>
+        <div class="optRow">
+          <label class="opt"><input type="radio" name="diag" value="D1"> DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO</label>
+        </div>
+        <div class="optRow">
+          <label class="opt"><input type="radio" name="diag" value="D2"> ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS</label>
+        </div>
+
+        <div class="subTitle">Alterações celulares benignas</div>
+        <div class="optRow">
+          <label class="opt"><input type="checkbox" id="ben_inflamacao"> Inflamação</label>
+          <label class="opt"><input type="checkbox" id="ben_metaplasia"> Metaplasia escamosa imatura</label>
+          <label class="opt"><input type="checkbox" id="ben_reparacao"> Reparação</label>
+          <label class="opt"><input type="checkbox" id="ben_atrofia"> Atrofia com inflamação</label>
+          <label class="opt"><input type="checkbox" id="ben_radiacao"> Radiação</label>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="section">
+        <h3>3. Microbiologia</h3>
+        <div class="optRow">
+          <label class="opt"><input type="checkbox" id="mic_lacto"> Lactobacillus sp</label>
+          <label class="opt"><input type="checkbox" id="mic_cocos"> Cocos</label>
+          <label class="opt"><input type="checkbox" id="mic_chlamydia"> Sugestivo de Chlamydia sp</label>
+          <label class="opt"><input type="checkbox" id="mic_actinomyces"> Actinomyces sp</label>
+          <label class="opt"><input type="checkbox" id="mic_candida"> Candida sp</label>
+          <label class="opt"><input type="checkbox" id="mic_trich"> Trichomonas vaginalis</label>
+          <label class="opt"><input type="checkbox" id="mic_gard"> Gardnerella/Mobiluncus</label>
+          <label class="opt"><input type="checkbox" id="mic_hpv"> Vírus Herpes</label>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="section">
+        <h3>4. Conclusão técnica</h3>
+        <div class="optRow">
+          <label class="opt"><input type="radio" name="conclusao" value="Negativo para malignidade"> NEGATIVO PARA MALIGNIDADE</label>
+        </div>
+
+        <div class="subTitle">Células atípicas de significado indeterminado</div>
+        <div class="optRow">
+          <label class="opt"><input type="radio" name="atipias" value="AC1"> ESCAMOSAS: Não se pode afastar lesão de alto grau (ASC-H).</label>
+          <label class="opt"><input type="radio" name="atipias" value="AC2"> ATIPIAS EM CÉLULAS ESCAMOSAS</label>
+          <label class="opt"><input type="radio" name="atipias" value="AC3"> ATIPIAS EM CÉLULAS GLANDULARES — Adenocarcinoma "in situ".</label>
+        </div>
+      </div>
+
+      <!-- Observação -->
+      <div class="section">
+        <h3>Observação (para o laudo)</h3>
+        <textarea id="obsLaudo" placeholder="Digite aqui as observações do laudo..."></textarea>
+      </div>
+
+    </div>
   </div>
 
-  <div class="page" id="page">
+  <!-- ✅ IMPRESSÃO: cabeçalho + dados + texto montado -->
+  <div class="printWrap">
+    <div class="page">
 
-    <div class="header">
-      <div class="headerLeft">
-        <p class="title">SI — SISTEMA DE INFORMAÇÃO</p>
-        <p class="sub">LAUDO / EMISSÃO</p>
-      </div>
-
-      <div class="headerRight">
-        <span class="lbl">Nº EXAME</span>
-        <span class="v" id="exame">—</span>
-      </div>
-    </div>
-
-    <div class="block">
-      <p class="blockTitle">Dados do paciente</p>
-
-      <div class="grid">
+      <div class="pHeader">
         <div>
-          <div class="line">
-            <div class="item" style="min-width:100%;">
-              <span class="k">Paciente:</span>
-              <span class="v" id="paciente">—</span>
-            </div>
-          </div>
-
-          <div class="line">
-            <div class="item">
-              <span class="k">Data Coleta:</span>
-              <span class="v" id="data_coleta">—</span>
-            </div>
-
-            <div class="item">
-              <span class="k">Nascimento:</span>
-              <span class="v" id="data_nascimento">—</span>
-            </div>
-          </div>
-
-          <div class="line">
-            <div class="item">
-              <span class="k">Cartão SUS:</span>
-              <span class="v" id="cartao_sus">—</span>
-            </div>
-
-            <div class="item">
-              <span class="k">Telefone:</span>
-              <span class="v" id="telefone">—</span>
-            </div>
-          </div>
+          <p class="title">SI — SISTEMA DE INFORMAÇÃO</p>
+          <p class="sub">LAUDO / EMISSÃO</p>
         </div>
-
-        <div>
-          <div class="line">
-            <div class="item" style="min-width:100%;">
-              <span class="k">Endereço:</span>
-              <span class="v" id="endereco">—</span>
-            </div>
-          </div>
-
-          <div class="line">
-            <div class="item" style="min-width:100%;">
-              <span class="k">Cidade / CEP:</span>
-              <span class="v" id="cidadeCep">—</span>
-            </div>
-          </div>
-
-          <div class="line">
-            <div class="item" style="min-width:100%;">
-              <span class="k">Observação:</span>
-              <span class="v" id="observacao">—</span>
-            </div>
-          </div>
+        <div class="examBox">
+          <div class="lbl">Nº EXAME</div>
+          <div class="val" id="p_exame">—</div>
         </div>
       </div>
-    </div>
 
-    <div class="content">
-      <p class="contentTitle">Conteúdo do laudo</p>
+      <div class="pBlock">
+        <p class="pBlockTitle">Dados do paciente</p>
 
-      <div class="text" id="textoLaudo">
-RESULTADO:
+        <div class="pGrid">
+          <div>
+            <div class="pLine">
+              <div class="pItem" style="min-width:100%;">
+                <span class="pk">Paciente:</span>
+                <span class="pv" id="p_paciente">—</span>
+              </div>
+            </div>
 
-(Preencha aqui os achados do exame.)
+            <div class="pLine">
+              <div class="pItem">
+                <span class="pk">Data Coleta:</span>
+                <span class="pv" id="p_data_coleta">—</span>
+              </div>
+              <div class="pItem">
+                <span class="pk">Nascimento:</span>
+                <span class="pv" id="p_data_nascimento">—</span>
+              </div>
+            </div>
 
-OBSERVAÇÕES:
+            <div class="pEndRow">
+              <div class="pEndLeft">
+                <span class="pk">Endereço:</span>
+                <span class="pv" id="p_endereco">—</span>
+              </div>
 
-(Se necessário.)
+              <div class="pEndRight">
+                <div class="pItem">
+                  <span class="pk">Cartão SUS:</span>
+                  <span class="pv" id="p_sus">—</span>
+                </div>
+                <div class="pItem">
+                  <span class="pk">Telefone:</span>
+                  <span class="pv" id="p_tel">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="pLine">
+              <div class="pItem" style="min-width:100%;">
+                <span class="pk">Cidade / CEP:</span>
+                <span class="pv" id="p_cidadecep">—</span>
+              </div>
+            </div>
+            <div class="pLine">
+              <div class="pItem" style="min-width:100%;">
+                <span class="pk">Observação:</span>
+                <span class="pv" id="p_obscab">—</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
 
-    <div class="assinatura">
-      <div class="resp">
-        Responsável técnico:
-        <small id="responsavel">—</small>
+      <div class="pContent">
+        <p class="pContentTitle">Conteúdo do laudo</p>
+        <div class="pText" id="p_textoLaudo">—</div>
       </div>
 
-      <div style="text-align:right;font-size:11px;color:rgba(255,255,255,.85);font-weight:900;">
-        Emissão: <span id="emissao">—</span>
+      <div class="pFooter">
+        <span>SI — SISTEMA DE INFORMAÇÃO</span>
+        <span id="p_footerExame">EXAME: —</span>
       </div>
-    </div>
 
-    <div class="footer">
-      <span>SI — SISTEMA DE INFORMAÇÃO</span>
-      <span id="footerExame">EXAME: —</span>
     </div>
-
   </div>
 
   <script>
@@ -430,7 +519,7 @@ OBSERVAÇÕES:
       return new URLSearchParams(window.location.search).get(nome) || "";
     }
 
-    function lerDados(){
+    function lerDadosCabecalho(){
       const dados = {
         paciente: getParam("paciente"),
         exame: getParam("exame"),
@@ -452,15 +541,14 @@ OBSERVAÇÕES:
           Object.assign(dados, ls);
         }catch(e){}
       }
-
       return dados;
     }
 
     function montarEndereco(d){
       const a = [];
       if(d.rua) a.push(d.rua);
-      if(d.bairro) a.push(d.bairro);
-      return a.length ? a.join(" — ") : "—";
+      if(d.bairro) a.push("— " + d.bairro);
+      return a.length ? a.join(" ") : "—";
     }
 
     function montarCidadeCep(d){
@@ -470,29 +558,114 @@ OBSERVAÇÕES:
       return a.length ? a.join(" — ") : "—";
     }
 
-    function hojeBR(){
-      const dt = new Date();
-      const dd = String(dt.getDate()).padStart(2,"0");
-      const mm = String(dt.getMonth()+1).padStart(2,"0");
-      const aa = dt.getFullYear();
-      return `${dd}/${mm}/${aa}`;
+    function valRadio(name){
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : "";
     }
 
-    function preencher(){
-      const d = lerDados();
+    function listChecks(map){
+      return Object.entries(map)
+        .filter(([id])=> document.getElementById(id).checked)
+        .map(([,label])=> label);
+    }
 
-      $("paciente").textContent = d.paciente || "—";
-      $("exame").textContent = d.exame || "—";
-      $("data_coleta").textContent = d.data_coleta || "—";
-      $("data_nascimento").textContent = d.data_nascimento || "—";
-      $("cartao_sus").textContent = d.cartao_sus || "—";
-      $("telefone").textContent = d.telefone || "—";
-      $("observacao").textContent = d.observacao || "—";
-      $("responsavel").textContent = d.responsavel || "—";
-      $("endereco").textContent = montarEndereco(d);
-      $("cidadeCep").textContent = montarCidadeCep(d);
-      $("emissao").textContent = hojeBR();
-      $("footerExame").textContent = `EXAME: ${d.exame || "—"}`;
+    function montarTextoLaudo(){
+      // Seções
+      const adequa = valRadio("adequabilidade");
+      const zona = valRadio("zona");
+      const diag = valRadio("diag");
+      const concl = valRadio("conclusao");
+      const atip = valRadio("atipias");
+      const obs = ($("obsLaudo").value || "").trim();
+
+      const epitelios = listChecks({
+        "epi_escamoso":"Escamoso",
+        "epi_glandular":"Glandular",
+        "epi_metaplasico":"Metaplásico"
+      });
+
+      const benignas = listChecks({
+        "ben_inflamacao":"Inflamação",
+        "ben_metaplasia":"Metaplasia escamosa imatura",
+        "ben_reparacao":"Reparação",
+        "ben_atrofia":"Atrofia com inflamação",
+        "ben_radiacao":"Radiação"
+      });
+
+      const micro = listChecks({
+        "mic_lacto":"Lactobacillus sp",
+        "mic_cocos":"Cocos",
+        "mic_chlamydia":"Sugestivo de Chlamydia sp",
+        "mic_actinomyces":"Actinomyces sp",
+        "mic_candida":"Candida sp",
+        "mic_trich":"Trichomonas vaginalis",
+        "mic_gard":"Gardnerella/Mobiluncus",
+        "mic_hpv":"Vírus Herpes"
+      });
+
+      let out = "";
+      out += "LAUDO DO EXAME CITOPATOLÓGICO DO COLO DO ÚTERO\n\n";
+
+      out += "1. AVALIAÇÃO PRÉ-ANALÍTICA\n";
+      if(adequa) out += `ADEQUABILIDADE: ${adequa}\n`;
+      if(epitelios.length) out += `EPITÉLIOS: ${epitelios.join(", ")}\n`;
+      if(zona) out += `ZONA DE TRANSFORMAÇÃO: ${zona}\n`;
+      out += "\n";
+
+      out += "2. DIAGNÓSTICO DESCRITIVO\n";
+      if(diag === "D1") out += "DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO\n";
+      if(diag === "D2") out += "ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:\n";
+      if(diag === "D2" && benignas.length){
+        benignas.forEach(x=> out += `  - ${x}\n`);
+      }
+      out += "\n";
+
+      out += "3. MICROBIOLOGIA\n";
+      if(micro.length){
+        micro.forEach(x=> out += `  - ${x}\n`);
+      }else{
+        out += "  - —\n";
+      }
+      out += "\n";
+
+      out += "4. CONCLUSÃO TÉCNICA\n";
+      if(concl) out += `${concl}\n`;
+
+      if(atip === "AC1"){
+        out += "\nCÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO:\n";
+        out += "                                - ESCAMOSAS: Não se pode afastar lesão de alto grau (ASC-H).\n";
+      }
+      if(atip === "AC2"){
+        out += "\nATIPIAS EM CÉLULAS ESCAMOSAS:\n";
+      }
+      if(atip === "AC3"){
+        out += "\nATIPIAS EM CÉLULAS GLANDULARES:\n";
+        out += '      - Adenocarcinoma "in situ".\n';
+      }
+
+      if(obs){
+        out += "\nOBSERVAÇÕES:\n";
+        out += obs + "\n";
+      }
+
+      return out.trim();
+    }
+
+    function preencherImpressao(){
+      const d = lerDadosCabecalho();
+
+      $("p_paciente").textContent = d.paciente || "—";
+      $("p_exame").textContent = d.exame || "—";
+      $("p_data_coleta").textContent = d.data_coleta || "—";
+      $("p_data_nascimento").textContent = d.data_nascimento || "—";
+      $("p_sus").textContent = d.cartao_sus || "—";
+      $("p_tel").textContent = d.telefone || "—";
+      $("p_endereco").textContent = montarEndereco(d);
+      $("p_cidadecep").textContent = montarCidadeCep(d);
+      $("p_obscab").textContent = d.observacao || "—";
+      $("p_footerExame").textContent = `EXAME: ${d.exame || "—"}`;
+
+      $("p_textoLaudo").textContent = montarTextoLaudo();
     }
 
     function avisarIndexImpressao(){
@@ -501,10 +674,14 @@ OBSERVAÇÕES:
       }catch(e){}
     }
 
-    window.addEventListener("load", preencher);
+    $("btnImprimir").addEventListener("click", ()=>{
+      preencherImpressao();
+      setTimeout(()=> window.print(), 50);
+    });
 
-    $("btnImprimir").addEventListener("click", ()=> window.print());
-    window.addEventListener("afterprint", avisarIndexImpressao);
+    window.addEventListener("afterprint", ()=>{
+      avisarIndexImpressao();
+    });
   </script>
 
 </body>
