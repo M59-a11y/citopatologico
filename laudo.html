@@ -7,8 +7,6 @@
 
   <style>
     :root{
-      --txt:#0f172a;
-      --muted:#334155;
       --border:rgba(255,255,255,.18);
       --glass1: rgba(255,255,255,.12);
       --glass2: rgba(255,255,255,.06);
@@ -19,23 +17,18 @@
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; height:100%; }
 
-    /* ✅ VISUAL (tela dentro do iframe) */
     body{
       font-family: Arial, sans-serif;
       background: transparent;
       color:#fff;
       overflow-x:hidden;
       overflow-y:auto;
-
       -ms-overflow-style:none;
       scrollbar-width:none;
     }
     body::-webkit-scrollbar{ width:0; height:0; display:none; }
 
-    /* ✅ área do formulário na tela */
-    .screenWrap{
-      padding: 14px;
-    }
+    .screenWrap{ padding: 14px; }
 
     .screenCard{
       border-radius: 22px;
@@ -83,7 +76,6 @@
     }
     .btn:active{ transform: translateY(1px); }
 
-    /* ✅ formulário */
     .section{
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.14);
@@ -147,185 +139,82 @@
       outline:none;
     }
 
-    /* ============================================================
-       ✅ IMPRESSÃO: A4 + CABEÇALHO SOMENTE NA IMPRESSÃO
-    ============================================================ */
+    /* ====================== IMPRESSÃO ====================== */
     .printWrap{ display:none; }
 
     @media print{
-      body{
-        background:#fff !important;
-        color:#111827 !important;
-        overflow: visible !important;
-      }
-
+      body{ background:#fff !important; color:#111827 !important; overflow: visible !important; }
       .screenWrap{ display:none !important; }
       .printWrap{ display:block !important; }
 
-      .page{
+      .printPage{
+        position: relative;
         width: 210mm;
         min-height: 297mm;
-        padding: 12mm 12mm 16mm 12mm;
         margin: 0 auto;
+        background:#fff;
       }
 
-      .pHeader{
-        border:1px solid #cbd5e1;
+      .pdfBase{
+        position:absolute;
+        inset:0;
+        width:100%;
+        height:100%;
+        z-index:0;
+      }
+
+      .printOverlay{
+        position:absolute;
+        inset:0;
+        z-index:1;
+        padding: 12mm 12mm 16mm 12mm;
+        font-family: "Arial Narrow", Arial, sans-serif;
+        font-size: 10pt;
+        color:#000;
+      }
+
+      .cabecalhoBox{
+        border: 1px solid #cbd5e1;
         border-radius: 10px;
         padding: 10px 12px;
-        display:flex;
-        justify-content:space-between;
-        align-items:flex-start;
-        gap:10px;
+        margin-bottom: 10px;
       }
 
-      .pHeader .title{
-        font-size: 13px;
-        font-weight: 900;
-        letter-spacing:.10em;
-        text-transform: uppercase;
-        margin:0 0 6px 0;
-        color:#0f172a;
-      }
-
-      .pHeader .sub{
-        margin:0;
-        font-size: 11px;
-        color:#374151;
-        font-weight: 800;
-      }
-
-      .pHeader .examBox{
-        text-align:right;
-        min-width: 190px;
-        font-size: 12px;
-        color:#0f172a;
-      }
-      .pHeader .lbl{
-        font-size: 10px;
-        color:#374151;
-        font-weight: 900;
-        letter-spacing:.12em;
-        text-transform: uppercase;
-      }
-      .pHeader .val{
-        font-weight: 900;
-        font-size: 12px;
-      }
-
-      .pBlock{
-        margin-top: 10px;
-        border:1px solid #cbd5e1;
-        border-radius: 10px;
-        padding: 10px 12px;
-      }
-      .pBlockTitle{
-        margin:0 0 8px 0;
-        font-size: 11px;
-        font-weight: 900;
-        letter-spacing:.14em;
-        text-transform: uppercase;
-        color:#0f172a;
-      }
-
-      .pGrid{
+      .cabGrid{
         display:grid;
         grid-template-columns: 1fr 1fr;
-        gap:10px;
+        gap: 10px;
       }
 
-      .pLine{
+      .cabLine{
         display:flex;
-        gap: 12px;
-        flex-wrap:wrap;
-        padding: 4px 0;
-        border-bottom: 1px dashed rgba(148,163,184,.55);
-      }
-      .pLine:last-child{ border-bottom:none; }
-
-      .pItem{
-        display:flex;
-        gap:6px;
-        align-items:baseline;
-        min-width: 240px;
-      }
-      .pk{
-        font-size: 10px;
-        font-weight: 900;
-        letter-spacing:.08em;
-        text-transform: uppercase;
-        color:#374151;
-        white-space:nowrap;
-      }
-      .pv{
-        font-size: 11px;
-        font-weight: 700;
-        color:#111827;
-        overflow-wrap:anywhere;
+        justify-content:space-between;
+        gap: 10px;
+        font-size: 10pt;
+        margin: 4px 0;
       }
 
-      /* ✅ end + sus/tel alinhado e endereço 1 linha */
-      .pEndRow{
-        display:flex;
-        gap:12px;
-        flex-wrap: nowrap;
-        align-items:flex-start;
-        padding: 4px 0;
-        border-bottom: 1px dashed rgba(148,163,184,.55);
-      }
-      .pEndLeft{
-        flex:1 1 auto;
-        min-width:0;
-        display:flex;
-        gap:6px;
-        align-items:baseline;
-        overflow:hidden;
-      }
-      .pEndLeft .pv{
-        white-space: nowrap;
-        overflow:hidden;
-        text-overflow: ellipsis;
-      }
-      .pEndRight{
-        flex:0 0 260px;
-        min-width:260px;
+      .cabLine b{ font-weight: 700; }
+
+      /* ✅ NÃO quebrar Cidade/CEP em coluna fina */
+      .rightBox{
         display:flex;
         flex-direction:column;
-        gap:6px;
+        gap: 6px;
       }
 
-      .pContent{
-        margin-top: 10px;
-        border:1px solid #cbd5e1;
+      .laudoConteudo{
+        border: 1px solid #cbd5e1;
         border-radius: 10px;
         padding: 12px;
       }
 
-      .pContentTitle{
-        margin:0 0 10px 0;
-        font-size: 11px;
-        font-weight: 900;
-        letter-spacing:.14em;
-        text-transform: uppercase;
-        color:#0f172a;
-      }
-
-      .pText{
+      .laudoConteudo pre{
+        margin:0;
+        white-space:pre-wrap;
         font-family: "Arial Narrow", Arial, sans-serif;
         font-size: 10pt;
-        color:#000;
-        line-height: 1.35;
-        white-space: pre-wrap;
-      }
-
-      .pFooter{
-        margin-top: 10px;
-        border-top: 1px solid #cbd5e1;
-        padding-top: 6px;
-        font-size: 10px;
-        color:#374151;
-        display:flex;
-        justify-content:space-between;
+        line-height: 1.3;
       }
     }
   </style>
@@ -333,18 +222,18 @@
 
 <body>
 
-  <!-- ✅ TELA: Formulário completo para digitação -->
+  <!-- ✅ TELA: FORMULÁRIO -->
   <div class="screenWrap">
     <div class="screenCard">
 
       <div class="topBar">
         <strong>LAUDO — DIGITAÇÃO</strong>
-        <button class="btn" id="btnImprimir" type="button">IMPRIMIR</button>
       </div>
 
       <!-- 1 -->
       <div class="section">
         <h3>1. Avaliação pré-analítica</h3>
+
         <div class="subTitle">Adequabilidade</div>
         <div class="optRow">
           <label class="opt"><input type="radio" name="adequabilidade" value="Satisfatória"> Satisfatória</label>
@@ -360,8 +249,8 @@
 
         <div class="subTitle">Zona de transformação</div>
         <div class="optRow">
-          <label class="opt"><input type="radio" name="zona" value="Sim"> Sim</label>
-          <label class="opt"><input type="radio" name="zona" value="Não"> Não</label>
+          <label class="opt"><input type="radio" name="zona" id="zona_sim" value="Sim"> Sim</label>
+          <label class="opt"><input type="radio" name="zona" id="zona_nao" value="Não"> Não</label>
         </div>
       </div>
 
@@ -375,6 +264,7 @@
           <label class="opt"><input type="radio" name="diag" value="D2"> ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS</label>
         </div>
 
+        <!-- ✅ título curto (sem duplicar frase enorme) -->
         <div class="subTitle">Alterações celulares benignas</div>
         <div class="optRow">
           <label class="opt"><input type="checkbox" id="ben_inflamacao"> Inflamação</label>
@@ -403,15 +293,27 @@
       <!-- 4 -->
       <div class="section">
         <h3>4. Conclusão técnica</h3>
+
+        <!-- ✅ manter todas opções -->
         <div class="optRow">
           <label class="opt"><input type="radio" name="conclusao" value="Negativo para malignidade"> NEGATIVO PARA MALIGNIDADE</label>
+          <label class="opt"><input type="radio" name="conclusao" value="Inflamação"> INFLAMAÇÃO</label>
+          <label class="opt"><input type="radio" name="conclusao" value="Alterações benignas"> ALTERAÇÕES BENIGNAS</label>
         </div>
 
-        <div class="subTitle">Células atípicas de significado indeterminado</div>
+        <div class="subTitle">Células atípicas</div>
         <div class="optRow">
-          <label class="opt"><input type="radio" name="atipias" value="AC1"> ESCAMOSAS: Não se pode afastar lesão de alto grau (ASC-H).</label>
-          <label class="opt"><input type="radio" name="atipias" value="AC2"> ATIPIAS EM CÉLULAS ESCAMOSAS</label>
-          <label class="opt"><input type="radio" name="atipias" value="AC3"> ATIPIAS EM CÉLULAS GLANDULARES — Adenocarcinoma "in situ".</label>
+          <label class="opt"><input type="radio" name="atipias" value="AC1">
+            ESCAMOSAS: Não se pode afastar lesão de alto grau (ASC-H).
+          </label>
+
+          <label class="opt"><input type="radio" name="atipias" value="AC2">
+            ATIPIAS EM CÉLULAS ESCAMOSAS
+          </label>
+
+          <label class="opt"><input type="radio" name="atipias" value="AC3">
+            ATIPIAS EM CÉLULAS GLANDULARES — Adenocarcinoma "in situ".
+          </label>
         </div>
       </div>
 
@@ -421,94 +323,45 @@
         <textarea id="obsLaudo" placeholder="Digite aqui as observações do laudo..."></textarea>
       </div>
 
+      <!-- ✅ botão imprimir no FINAL (como você pediu) -->
+      <div style="margin-top:12px;">
+        <button class="btn" id="btnImprimir" type="button" style="width:100%;">IMPRIMIR</button>
+      </div>
+
     </div>
   </div>
 
-  <!-- ✅ IMPRESSÃO: cabeçalho + dados + texto montado -->
+  <!-- ✅ IMPRESSÃO -->
   <div class="printWrap">
-    <div class="page">
+    <div class="printPage">
+      <!-- modelo PDF -->
+      <iframe class="pdfBase" id="pdfBase" src=""></iframe>
 
-      <div class="pHeader">
-        <div>
-          <p class="title">SI — SISTEMA DE INFORMAÇÃO</p>
-          <p class="sub">LAUDO / EMISSÃO</p>
-        </div>
-        <div class="examBox">
-          <div class="lbl">Nº EXAME</div>
-          <div class="val" id="p_exame">—</div>
-        </div>
-      </div>
-
-      <div class="pBlock">
-        <p class="pBlockTitle">Dados do paciente</p>
-
-        <div class="pGrid">
-          <div>
-            <div class="pLine">
-              <div class="pItem" style="min-width:100%;">
-                <span class="pk">Paciente:</span>
-                <span class="pv" id="p_paciente">—</span>
-              </div>
+      <!-- texto impresso -->
+      <div class="printOverlay">
+        <div class="cabecalhoBox">
+          <div class="cabGrid">
+            <div class="rightBox">
+              <div class="cabLine"><span><b>Paciente:</b></span> <span id="p_paciente">—</span></div>
+              <div class="cabLine"><span><b>Data coleta:</b></span> <span id="p_data_coleta">—</span></div>
+              <div class="cabLine"><span><b>Nascimento:</b></span> <span id="p_data_nascimento">—</span></div>
+              <div class="cabLine"><span><b>Endereço:</b></span> <span id="p_endereco">—</span></div>
             </div>
 
-            <div class="pLine">
-              <div class="pItem">
-                <span class="pk">Data Coleta:</span>
-                <span class="pv" id="p_data_coleta">—</span>
-              </div>
-              <div class="pItem">
-                <span class="pk">Nascimento:</span>
-                <span class="pv" id="p_data_nascimento">—</span>
-              </div>
-            </div>
-
-            <div class="pEndRow">
-              <div class="pEndLeft">
-                <span class="pk">Endereço:</span>
-                <span class="pv" id="p_endereco">—</span>
-              </div>
-
-              <div class="pEndRight">
-                <div class="pItem">
-                  <span class="pk">Cartão SUS:</span>
-                  <span class="pv" id="p_sus">—</span>
-                </div>
-                <div class="pItem">
-                  <span class="pk">Telefone:</span>
-                  <span class="pv" id="p_tel">—</span>
-                </div>
-              </div>
+            <div class="rightBox">
+              <div class="cabLine"><span><b>Nº exame:</b></span> <span id="p_exame">—</span></div>
+              <div class="cabLine"><span><b>Cartão SUS:</b></span> <span id="p_sus">—</span></div>
+              <div class="cabLine"><span><b>Telefone:</b></span> <span id="p_tel">—</span></div>
+              <div class="cabLine"><span><b>Cidade / CEP:</b></span> <span id="p_cidadecep">—</span></div>
+              <div class="cabLine"><span><b>Obs:</b></span> <span id="p_obscab">—</span></div>
             </div>
           </div>
+        </div>
 
-          <div>
-            <div class="pLine">
-              <div class="pItem" style="min-width:100%;">
-                <span class="pk">Cidade / CEP:</span>
-                <span class="pv" id="p_cidadecep">—</span>
-              </div>
-            </div>
-            <div class="pLine">
-              <div class="pItem" style="min-width:100%;">
-                <span class="pk">Observação:</span>
-                <span class="pv" id="p_obscab">—</span>
-              </div>
-            </div>
-          </div>
-
+        <div class="laudoConteudo">
+          <pre id="p_textoLaudo">—</pre>
         </div>
       </div>
-
-      <div class="pContent">
-        <p class="pContentTitle">Conteúdo do laudo</p>
-        <div class="pText" id="p_textoLaudo">—</div>
-      </div>
-
-      <div class="pFooter">
-        <span>SI — SISTEMA DE INFORMAÇÃO</span>
-        <span id="p_footerExame">EXAME: —</span>
-      </div>
-
     </div>
   </div>
 
@@ -531,7 +384,6 @@
         bairro: getParam("bairro"),
         cidade: getParam("cidade"),
         cep: getParam("cep"),
-        responsavel: getParam("responsavel"),
         observacao: getParam("observacao")
       };
 
@@ -570,7 +422,6 @@
     }
 
     function montarTextoLaudo(){
-      // Seções
       const adequa = valRadio("adequabilidade");
       const zona = valRadio("zona");
       const diag = valRadio("diag");
@@ -614,18 +465,15 @@
 
       out += "2. DIAGNÓSTICO DESCRITIVO\n";
       if(diag === "D1") out += "DENTRO DOS LIMITES DA NORMALIDADE NO MATERIAL EXAMINADO\n";
-      if(diag === "D2") out += "ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:\n";
-      if(diag === "D2" && benignas.length){
-        benignas.forEach(x=> out += `  - ${x}\n`);
+      if(diag === "D2"){
+        out += "ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS:\n";
+        if(benignas.length) benignas.forEach(x=> out += `  - ${x}\n`);
       }
       out += "\n";
 
       out += "3. MICROBIOLOGIA\n";
-      if(micro.length){
-        micro.forEach(x=> out += `  - ${x}\n`);
-      }else{
-        out += "  - —\n";
-      }
+      if(micro.length) micro.forEach(x=> out += `  - ${x}\n`);
+      else out += "  - —\n";
       out += "\n";
 
       out += "4. CONCLUSÃO TÉCNICA\n";
@@ -651,6 +499,19 @@
       return out.trim();
     }
 
+    /* ✅ CHAMA MODELO PDF */
+    function escolherTemplate(){
+      const diag = valRadio("diag");     // D1 ou D2
+      const atip = valRadio("atipias");  // AC1/AC2/AC3
+
+      if(atip === "AC1") return "AC1.pdf";
+      if(atip === "AC2") return "AC2.pdf";
+      if(atip === "AC3") return "AC3.pdf";
+
+      if(diag === "D2") return "D2.pdf";
+      return "D1.pdf";
+    }
+
     function preencherImpressao(){
       const d = lerDadosCabecalho();
 
@@ -663,9 +524,12 @@
       $("p_endereco").textContent = montarEndereco(d);
       $("p_cidadecep").textContent = montarCidadeCep(d);
       $("p_obscab").textContent = d.observacao || "—";
-      $("p_footerExame").textContent = `EXAME: ${d.exame || "—"}`;
 
       $("p_textoLaudo").textContent = montarTextoLaudo();
+
+      // modelo PDF
+      const pdf = escolherTemplate();
+      $("pdfBase").src = `${pdf}?v=${Date.now()}`;
     }
 
     function avisarIndexImpressao(){
@@ -674,14 +538,42 @@
       }catch(e){}
     }
 
+    /* ==========================
+       ✅ REGRAS AUTOMÁTICAS
+       1) Zona NÃO -> desmarca epitélios
+       2) marcar epitélio -> zona SIM
+    ========================== */
+    function aplicarRegrasAuto(){
+      const zonaNao = $("zona_nao");
+      const zonaSim = $("zona_sim");
+      const e1 = $("epi_escamoso");
+      const e2 = $("epi_glandular");
+      const e3 = $("epi_metaplasico");
+
+      zonaNao.addEventListener("change", ()=>{
+        if(zonaNao.checked){
+          e1.checked = false;
+          e2.checked = false;
+          e3.checked = false;
+        }
+      });
+
+      [e1,e2,e3].forEach(el=>{
+        el.addEventListener("change", ()=>{
+          const any = e1.checked || e2.checked || e3.checked;
+          if(any) zonaSim.checked = true;
+        });
+      });
+    }
+
+    window.addEventListener("load", aplicarRegrasAuto);
+
     $("btnImprimir").addEventListener("click", ()=>{
       preencherImpressao();
-      setTimeout(()=> window.print(), 50);
+      setTimeout(()=> window.print(), 80);
     });
 
-    window.addEventListener("afterprint", ()=>{
-      avisarIndexImpressao();
-    });
+    window.addEventListener("afterprint", ()=> avisarIndexImpressao());
   </script>
 
 </body>
