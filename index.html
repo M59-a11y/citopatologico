@@ -24,7 +24,8 @@
       height:100%;
       margin:0;
       padding:0;
-      overflow:hidden;
+      overflow:hidden !important;
+      overflow-x:hidden !important;
     }
 
     body{
@@ -43,6 +44,7 @@
       pointer-events:none;
       z-index:0;
       filter: contrast(1.25) brightness(1.08);
+      mix-blend-mode: screen;
     }
 
     body::after{
@@ -93,15 +95,22 @@
       display:flex;
       align-items:center;
       gap:10px;
+      flex-wrap:nowrap;
       white-space:nowrap;
       font-weight:900;
       letter-spacing:.9px;
       text-transform:uppercase;
+      color:#fff;
       text-shadow: 0 12px 28px rgba(0,0,0,.32);
       min-width:0;
     }
+
     .sysOnly .t1{ font-size: 18px; }
-    .sysOnly .dot{ font-size: 14px; opacity:.82; transform: translateY(-1px); }
+    .sysOnly .dot{
+      font-size: 14px;
+      opacity: .82;
+      transform: translateY(-1px);
+    }
     .sysOnly .t2{
       font-size: 18px;
       padding: 3px 12px;
@@ -112,12 +121,15 @@
     }
 
     .devCard{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-end;
       padding: 10px 14px;
       border-radius: 14px;
       background: rgba(6, 35, 63, 0.88);
       border: 1px solid rgba(255,255,255,.18);
       box-shadow: 0 10px 20px rgba(0,0,0,.18);
-      text-align:right;
       user-select:none;
       min-width: 170px;
     }
@@ -165,17 +177,14 @@
       display:flex;
       flex-direction:column;
       gap: 12px;
+
       overflow-y:auto;
       overflow-x:hidden;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      min-width:0;
+
+      -ms-overflow-style:none;
+      scrollbar-width:none;
     }
-    .panel::-webkit-scrollbar{
-      width:0 !important;
-      height:0 !important;
-      display:none !important;
-    }
+    .panel::-webkit-scrollbar{ width:0; height:0; display:none; }
 
     .panelTitle{
       margin:0;
@@ -183,6 +192,7 @@
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: uppercase;
+      color:#fff;
       text-shadow: 0 10px 24px rgba(0,0,0,.30);
       line-height:1.05;
     }
@@ -270,8 +280,10 @@
       color:#041b2f;
       background: var(--verdeBtn);
       box-shadow: 0 16px 26px rgba(0,0,0,.18);
-      margin-top: 4px;
+      transition: transform .08s ease, filter .2s ease;
     }
+    .btn:hover{ filter: brightness(1.03); }
+    .btn:active{ transform: translateY(1px); }
 
     .btnSec{
       width: 100%;
@@ -304,6 +316,7 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
+      gap:10px;
       border-bottom:1px solid rgba(255,255,255,.12);
       background: rgba(6,35,63,.45);
     }
@@ -312,9 +325,9 @@
       letter-spacing:.12em;
       text-transform:uppercase;
       font-weight:900;
+      color:#fff;
     }
 
-    /* ✅ painel direito sem branco feio */
     .frameWrap{
       flex:1 1 auto;
       min-height:0;
@@ -370,9 +383,7 @@
       line-height:1.3;
     }
 
-    /* =========================================================
-       ✅ MODAL CEP
-    ========================================================= */
+    /* MODAL CEP */
     .modal{
       position: fixed;
       inset: 0;
@@ -450,8 +461,8 @@
     }
 
     @media (max-width: 1180px){
-      html,body{ overflow:auto; }
-      .app{ grid-template-columns: 1fr; height:auto; }
+      html,body{ overflow:auto !important; }
+      .app{ grid-template-columns: 1fr; height:auto; overflow:auto; }
       .right{ height: 62vh; }
       main{ height: calc(100vh - 120px); }
     }
@@ -480,8 +491,8 @@
             <h2 class="panelTitle">Digitação rápida</h2>
 
             <div class="legend">
-              Preencha campo por campo e use <b>TAB</b> para avançar.
-              <small>Ao entrar em <b>RUA</b> abre a busca CEP dentro do sistema. Ao escolher CEP/endereço, ele preenche Bairro/Cidade/CEP (Rua fica manual para inserir número).</small>
+              TAB = próximo campo. <b>F2</b> = abrir busca CEP.
+              <small>Busca CEP preenche Bairro/Cidade/CEP. Rua fica manual para nº da casa.</small>
             </div>
 
             <div class="form" id="formRapido">
@@ -492,9 +503,10 @@
 
               <div class="row2">
                 <div class="campo">
-                  <label for="exame">Nº Exame (Ex: 00059/2026)</label>
+                  <label for="exame">Nº Exame</label>
                   <input id="exame" type="text" placeholder="00059/2026" autocomplete="off">
                 </div>
+
                 <div class="campo">
                   <label for="responsavel">Responsável</label>
                   <select id="responsavel">
@@ -519,8 +531,8 @@
 
               <div class="row2">
                 <div class="campo">
-                  <label for="sus">Cartão SUS (11 ou 15 dígitos)</label>
-                  <input id="sus" type="text" placeholder="Somente números" autocomplete="off" inputmode="numeric">
+                  <label for="sus">Cartão SUS</label>
+                  <input id="sus" type="text" placeholder="11 ou 15 dígitos (não pula sozinho)" autocomplete="off" inputmode="numeric">
                 </div>
                 <div class="campo">
                   <label for="telefone">Telefone</label>
@@ -529,8 +541,8 @@
               </div>
 
               <div class="campo">
-                <label for="rua">Rua (digite número/casa)</label>
-                <input id="rua" type="text" placeholder="Rua / Av. / Travessa + nº" autocomplete="off">
+                <label for="rua">Rua (digite nº da casa)</label>
+                <input id="rua" type="text" placeholder="Rua / Av / Trav + nº" autocomplete="off">
               </div>
 
               <div class="row2">
@@ -558,6 +570,7 @@
               <button class="btn" id="btnExtrair" type="button">ABRIR LAUDO NO PAINEL</button>
               <button class="btnSec" id="btnBuscarCep" type="button">BUSCAR CEP / MUNICÍPIO (PB)</button>
             </div>
+
           </div>
         </section>
       </main>
@@ -588,7 +601,7 @@
         <button type="button" id="btnFecharCep">FECHAR</button>
       </div>
       <div class="modalFrame">
-        <iframe id="iframeCep" title="Busca CEP PB" src="busca-cep.html"></iframe>
+        <iframe id="iframeCep" title="Busca CEP PB" src="busca-cep.html?v=9"></iframe>
       </div>
     </div>
   </div>
@@ -602,8 +615,6 @@
       SNM: "SHEINA N. MORAIS RAMALHO",
       RHN: "ROSA HELENA NOGUEIRA GUIMARÃES VERAS"
     };
-
-    const soDigitos = (s)=> (s || "").replace(/\D+/g, "");
 
     function mostrarLaudo(){
       const ifr = $("iframeLaudo");
@@ -625,7 +636,6 @@
       $("modalCep").classList.add("show");
       $("modalCep").setAttribute("aria-hidden","false");
     }
-
     function fecharModalCep(){
       $("modalCep").classList.remove("show");
       $("modalCep").setAttribute("aria-hidden","true");
@@ -633,41 +643,30 @@
 
     $("btnFecharCep").addEventListener("click", fecharModalCep);
     $("modalCepClose").addEventListener("click", fecharModalCep);
+    $("btnBuscarCep").addEventListener("click", abrirModalCep);
 
     document.addEventListener("keydown", (e)=>{
-      if(e.key === "Escape" && $("modalCep").classList.contains("show")){
-        fecharModalCep();
-      }
-      if(e.ctrlKey && e.key === "Enter"){
-        e.preventDefault();
-        $("btnExtrair").click();
-      }
+      if(e.key === "Escape" && $("modalCep").classList.contains("show")) fecharModalCep();
+      if(e.key === "F2"){ e.preventDefault(); abrirModalCep(); }
+      if(e.ctrlKey && e.key === "Enter"){ e.preventDefault(); $("btnExtrair").click(); }
     });
 
-    function focarProximo(atual){
-      const fields = Array.from(document.querySelectorAll("#formRapido input, #formRapido select"))
-        .filter(x=>!x.disabled);
-      const i = fields.indexOf(atual);
-      const next = fields[i+1];
-      if(next) next.focus();
-    }
+    const soDigitos = (s)=> (s||"").replace(/\D+/g,"");
 
     function aplicarMascaraData(el){
       el.addEventListener("input", ()=>{
         let v = soDigitos(el.value).slice(0,8);
-        if(v.length > 2) v = v.slice(0,2) + "/" + v.slice(2);
-        if(v.length > 5) v = v.slice(0,5) + "/" + v.slice(5);
+        if(v.length > 2) v = v.slice(0,2)+"/"+v.slice(2);
+        if(v.length > 5) v = v.slice(0,5)+"/"+v.slice(5);
         el.value = v;
-        if(v.length === 10) focarProximo(el);
       });
     }
 
     function aplicarMascaraCEP(el){
       el.addEventListener("input", ()=>{
         let v = soDigitos(el.value).slice(0,8);
-        if(v.length > 5) v = v.slice(0,5) + "-" + v.slice(5);
+        if(v.length > 5) v = v.slice(0,5)+"-"+v.slice(5);
         el.value = v;
-        if(v.length === 9) focarProximo(el);
       });
     }
 
@@ -676,42 +675,44 @@
         let v = soDigitos(el.value).slice(0,11);
         if(v.length <= 10){
           if(v.length > 2) v = "(" + v.slice(0,2) + ") " + v.slice(2);
-          if(v.length > 9) v = v.slice(0,9) + "-" + v.slice(9);
+          if(soDigitos(v).length > 6) v = v.replace(/^(\(\d{2}\)\s\d{4})(\d+)/, "$1-$2");
         }else{
           v = "(" + v.slice(0,2) + ") " + v.slice(2,7) + "-" + v.slice(7);
         }
         el.value = v;
-        const d = soDigitos(v);
-        if(d.length === 10 || d.length === 11) focarProximo(el);
       });
     }
 
+    /* ✅ EXAME: não corta ano e aceita 00059/2026 */
     function aplicarMascaraExame(el){
       el.addEventListener("input", ()=>{
-        let v = (el.value || "").replace(/\s+/g,"").trim();
-        const m = v.match(/^(\d{1,6})\/(\d{1,4})$/);
-        if(m){
-          const a = m[1].padStart(5,"0").slice(-6);
-          const b = m[2].padStart(4,"0").slice(-4);
-          el.value = `${a}/${b}`;
-          return;
-        }
-        let d = soDigitos(v).slice(0,10);
-        if(d.length <= 9){
-          const p1 = d.slice(0, Math.min(5,d.length));
-          const p2 = d.length > 5 ? d.slice(5, 9) : "";
-          el.value = p2 ? `${p1}/${p2}` : p1;
-        }else{
-          el.value = `${d.slice(0,6)}/${d.slice(6,10)}`;
-        }
+        let raw = (el.value || "").replace(/\s+/g,"").trim();
+        raw = raw.replace("–","/").replace("-","/");
+
+        const m = raw.match(/^(\d{1,6})(?:\/(\d{0,4}))?$/);
+        if(!m){ return; }
+
+        const n = m[1] || "";
+        const ano = m[2] || "";
+        const nPad = n.padStart(5,"0").slice(0,6);
+        const anoFix = ano.slice(0,4);
+
+        el.value = anoFix.length ? `${nPad}/${anoFix}` : `${nPad}${raw.includes("/")?"/":""}${anoFix}`;
+      });
+
+      el.addEventListener("blur", ()=>{
+        const raw = (el.value || "").trim();
+        const m = raw.match(/^(\d{1,6})\/(\d{4})$/);
+        if(!m) return;
+        el.value = `${m[1].padStart(5,"0")}/${m[2]}`;
       });
     }
 
+    /* ✅ SUS: NÃO pula sozinho (remove auto-tab) */
     function aplicarRegraSUS(el){
       el.addEventListener("input", ()=>{
         const d = soDigitos(el.value).slice(0,15);
         el.value = d;
-        if(d.length === 11 || d.length === 15) focarProximo(el);
       });
     }
 
@@ -738,43 +739,13 @@
     function abrirLaudoNoPainel(dados){
       esconderLaudo();
       localStorage.setItem("SI_DADOS_LAUDO", JSON.stringify({ ...dados, ts: Date.now() }));
+
       const params = new URLSearchParams();
       Object.entries(dados).forEach(([k,v])=>{ if(v) params.set(k, v); });
       params.set("v", Date.now());
+
       $("iframeLaudo").src = `${LAUDO_URL}?${params.toString()}`;
     }
-
-    window.addEventListener("message", (ev)=>{
-      if(!ev.data || typeof ev.data !== "object") return;
-
-      if(ev.data.type === "CEP_SELECIONADO"){
-        const d = ev.data.payload || {};
-        /* ✅ RUA NÃO PREENCHE! */
-        if(d.bairro) $("bairro").value = d.bairro;
-        if(d.cidade) $("cidade").value = d.cidade;
-        if(d.cep) $("cep").value = d.cep;
-
-        fecharModalCep();
-
-        /* ✅ volta pro campo RUA (para digitar nº da casa) */
-        $("rua").focus();
-        $("rua").select();
-      }
-
-      if(ev.data.type === "LAUDO_IMPRESSO"){
-        document.querySelectorAll("#formRapido input, #formRapido select").forEach(el=>{
-          if(el.tagName === "SELECT") el.value = "";
-          else el.value = "";
-        });
-        esconderLaudo();
-        $("paciente").focus();
-      }
-    });
-
-    $("iframeLaudo").addEventListener("load", mostrarLaudo);
-
-    $("rua").addEventListener("focus", abrirModalCep);
-    $("btnBuscarCep").addEventListener("click", abrirModalCep);
 
     $("btnExtrair").addEventListener("click", ()=>{
       const dados = coletarDados();
@@ -785,6 +756,32 @@
       }
       abrirLaudoNoPainel(dados);
     });
+
+    window.addEventListener("message", (ev)=>{
+      if(!ev.data || typeof ev.data !== "object") return;
+
+      if(ev.data.type === "CEP_SELECIONADO"){
+        const d = ev.data.payload || {};
+        if(d.bairro) $("bairro").value = d.bairro;
+        if(d.cidade) $("cidade").value = d.cidade;
+        if(d.cep) $("cep").value = d.cep;
+
+        fecharModalCep();
+
+        $("rua").focus();
+        $("rua").select();
+      }
+
+      if(ev.data.type === "LAUDO_IMPRESSO"){
+        document.querySelectorAll("#formRapido input, #formRapido select").forEach(el=>{
+          el.value = "";
+        });
+        esconderLaudo();
+        $("paciente").focus();
+      }
+    });
+
+    $("iframeLaudo").addEventListener("load", mostrarLaudo);
 
     aplicarMascaraExame($("exame"));
     aplicarMascaraData($("data_coleta"));
