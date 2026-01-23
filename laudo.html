@@ -196,7 +196,6 @@
 
       .cabLine b{ font-weight: 700; }
 
-      /* ✅ NÃO quebrar Cidade/CEP em coluna fina */
       .rightBox{
         display:flex;
         flex-direction:column;
@@ -225,7 +224,6 @@
   <!-- ✅ TELA: FORMULÁRIO -->
   <div class="screenWrap">
     <div class="screenCard">
-
       <div class="topBar">
         <strong>LAUDO — DIGITAÇÃO</strong>
       </div>
@@ -264,7 +262,7 @@
           <label class="opt"><input type="radio" name="diag" value="D2"> ALTERAÇÕES CELULARES BENIGNAS REATIVAS OU REPARATIVAS</label>
         </div>
 
-        <!-- ✅ título curto (sem duplicar frase enorme) -->
+        <!-- ✅ Só fica isso aqui na tela -->
         <div class="subTitle">Alterações celulares benignas</div>
         <div class="optRow">
           <label class="opt"><input type="checkbox" id="ben_inflamacao"> Inflamação</label>
@@ -293,8 +291,6 @@
       <!-- 4 -->
       <div class="section">
         <h3>4. Conclusão técnica</h3>
-
-        <!-- ✅ manter todas opções -->
         <div class="optRow">
           <label class="opt"><input type="radio" name="conclusao" value="Negativo para malignidade"> NEGATIVO PARA MALIGNIDADE</label>
           <label class="opt"><input type="radio" name="conclusao" value="Inflamação"> INFLAMAÇÃO</label>
@@ -306,11 +302,9 @@
           <label class="opt"><input type="radio" name="atipias" value="AC1">
             ESCAMOSAS: Não se pode afastar lesão de alto grau (ASC-H).
           </label>
-
           <label class="opt"><input type="radio" name="atipias" value="AC2">
             ATIPIAS EM CÉLULAS ESCAMOSAS
           </label>
-
           <label class="opt"><input type="radio" name="atipias" value="AC3">
             ATIPIAS EM CÉLULAS GLANDULARES — Adenocarcinoma "in situ".
           </label>
@@ -323,7 +317,7 @@
         <textarea id="obsLaudo" placeholder="Digite aqui as observações do laudo..."></textarea>
       </div>
 
-      <!-- ✅ botão imprimir no FINAL (como você pediu) -->
+      <!-- ✅ imprimir no final -->
       <div style="margin-top:12px;">
         <button class="btn" id="btnImprimir" type="button" style="width:100%;">IMPRIMIR</button>
       </div>
@@ -334,10 +328,8 @@
   <!-- ✅ IMPRESSÃO -->
   <div class="printWrap">
     <div class="printPage">
-      <!-- modelo PDF -->
       <iframe class="pdfBase" id="pdfBase" src=""></iframe>
 
-      <!-- texto impresso -->
       <div class="printOverlay">
         <div class="cabecalhoBox">
           <div class="cabGrid">
@@ -483,9 +475,7 @@
         out += "\nCÉLULAS ATÍPICAS DE SIGNIFICADO INDETERMINADO:\n";
         out += "                                - ESCAMOSAS: Não se pode afastar lesão de alto grau (ASC-H).\n";
       }
-      if(atip === "AC2"){
-        out += "\nATIPIAS EM CÉLULAS ESCAMOSAS:\n";
-      }
+      if(atip === "AC2") out += "\nATIPIAS EM CÉLULAS ESCAMOSAS:\n";
       if(atip === "AC3"){
         out += "\nATIPIAS EM CÉLULAS GLANDULARES:\n";
         out += '      - Adenocarcinoma "in situ".\n';
@@ -499,10 +489,10 @@
       return out.trim();
     }
 
-    /* ✅ CHAMA MODELO PDF */
+    /* ✅ agora chama modelo certo */
     function escolherTemplate(){
-      const diag = valRadio("diag");     // D1 ou D2
-      const atip = valRadio("atipias");  // AC1/AC2/AC3
+      const diag = valRadio("diag");
+      const atip = valRadio("atipias");
 
       if(atip === "AC1") return "AC1.pdf";
       if(atip === "AC2") return "AC2.pdf";
@@ -527,22 +517,10 @@
 
       $("p_textoLaudo").textContent = montarTextoLaudo();
 
-      // modelo PDF
       const pdf = escolherTemplate();
       $("pdfBase").src = `${pdf}?v=${Date.now()}`;
     }
 
-    function avisarIndexImpressao(){
-      try{
-        window.parent.postMessage({ type: "LAUDO_IMPRESSO" }, "*");
-      }catch(e){}
-    }
-
-    /* ==========================
-       ✅ REGRAS AUTOMÁTICAS
-       1) Zona NÃO -> desmarca epitélios
-       2) marcar epitélio -> zona SIM
-    ========================== */
     function aplicarRegrasAuto(){
       const zonaNao = $("zona_nao");
       const zonaSim = $("zona_sim");
@@ -572,8 +550,6 @@
       preencherImpressao();
       setTimeout(()=> window.print(), 80);
     });
-
-    window.addEventListener("afterprint", ()=> avisarIndexImpressao());
   </script>
 
 </body>
